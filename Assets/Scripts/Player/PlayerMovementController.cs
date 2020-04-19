@@ -51,15 +51,19 @@ public class PlayerMovementController : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateMovement();
-        Flip();
+        UpdateDirection();
     }
 
     private void UpdateMovement()
     {
         _rb.MovePosition(_rb.position + _velocity * Time.fixedDeltaTime);
+        if (_rb.velocity.magnitude < .01)
+        {
+            _rb.velocity = Vector3.zero;
+        }
     }
 
-    private void Flip()
+    private void UpdateDirection()
     {
         if (_inputController.horizontalAxis > 0)
         {

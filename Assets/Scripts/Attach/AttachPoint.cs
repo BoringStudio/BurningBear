@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class AttachPoint : MonoBehaviour
 {
-    public Attachable attachableObject = null;
+    public Attachable attachedObject = null;
 
-    public void AttachObject(Attachable attachable, Transform to) {
-        attachable.Attach(to);
-        attachableObject = attachable;
+    public void AttachObject(Attachable toAttach, GameObject to) {
+        toAttach.Attach(to);
+        attachedObject = toAttach;
     }
 
-    public void DeattachObject(Vector3 to) {
-        attachableObject.Deattach(to);
-        attachableObject = null;
+    public void DeattachObject(Vector3 deattachPosition) {
+        attachedObject.Deattach(deattachPosition);
+        attachedObject = null;
     }
 
     // Start is called before the first frame update

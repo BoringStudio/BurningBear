@@ -19,7 +19,7 @@ public class PlayerInteractController : MonoBehaviour
 
     private const string flameTag = "Flame";
     private const string groundTag = "Ground";
-    private const string sinnerTag = "Sinner";
+    private const string attachableTag = "Attachable";
     private const string wallTag = "Wall";
     private const string waterTag = "Water";
 
@@ -72,11 +72,11 @@ public class PlayerInteractController : MonoBehaviour
                     switch (_player.state)
                     {
                         case Player.State.Normal:
-                            TryAttachSinner(hit);
+                            TryAttachObject(hit);
                             TryUpgradeUnit(hit);
                             break;
                         case Player.State.Attach:
-                            TryDeattachSinner(hit);
+                            TryDeattachObject(hit);
                             break;
                         case Player.State.Build:
                             TryBuildUnit(hit);
@@ -90,32 +90,36 @@ public class PlayerInteractController : MonoBehaviour
         }
     }
 
-    void TryAttachSinner(RaycastHit hit)
-    {
-        Debug.Log("Start try attach sinner...");
+    void TryMine(RaycastHit hit) {
 
-        if (hit.collider.gameObject.tag != sinnerTag)
-        {
-            Debug.Log("Hitted game object not sinner");
-            return;
-        }
-
-        var sinner = hit.collider.gameObject.GetComponentInChildren<Attachable>();
-        if (sinner == null)
-        {
-            Debug.LogError("Sinner component not found when grub");
-            return;
-        }
-
-        attachPoint.AttachObject(sinner, attachPoint.transform);
-        _player.state = Player.State.Attach;
-
-        Debug.Log("End try attach sinner");
     }
 
-    void TryDeattachSinner(RaycastHit hit)
+    void TryAttachObject(RaycastHit hit)
     {
-        Debug.Log("Start try deattach sinner...");
+        Debug.Log("Start try attach object...");
+
+        if (hit.collider.gameObject.tag != attachableTag)
+        {
+            Debug.Log("Hitted game object not attachable");
+            return;
+        }
+
+        var attachable = hit.collider.gameObject.GetComponentInChildren<Attachable>();
+        if (attachable == null)
+        {
+            Debug.LogError("Attachable component not found when attach");
+            return;
+        }
+
+        attachPoint.AttachObject(attachable, attachPoint.gameObject);
+        _player.state = Player.State.Attach;
+
+        Debug.Log("End try attach object");
+    }
+
+    void TryDeattachObject(RaycastHit hit)
+    {
+        Debug.Log("Start try deattach object...");
 
         switch (hit.collider.gameObject.tag)
         {
@@ -131,7 +135,7 @@ public class PlayerInteractController : MonoBehaviour
                 return;
         }
 
-        Debug.Log("End try deattach sinner");
+        Debug.Log("End try deattach object");
     }
 
     void TryBuildUnit(RaycastHit hit)
