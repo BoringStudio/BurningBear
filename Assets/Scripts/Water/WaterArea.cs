@@ -101,11 +101,9 @@ public class WaterArea : MonoBehaviour
 
     public void Evaporate(Vector3 worldPoint)
     {
-        var offset = worldPoint + new Vector3(width / 2, 0, height / 2);
+        var offset = worldPoint + new Vector3(width / 2 + 1, 0, height / 2 + 1);
         var x = (int)offset.x;
         var y = height - (int)offset.z;
-
-        Debug.Log(x + " " + y);
 
         var kernel = new uint[] { 3, 5, 7, 9, 9, 9, 7, 5, 3 };
         for (int i = 0; i < kernel.Length; ++i)
