@@ -55,7 +55,6 @@ public class Suck : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log(_currentFrame);
                     _materialPropertyBlock.SetTexture("_BaseMap", _suckTextures[_currentFrame++]);
                 }
 
