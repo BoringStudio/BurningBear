@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sinner : MonoBehaviour
+public class Sinner : MonoBehaviour, Destroyable
 {
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnTriggerEnter(Collider collider)
@@ -32,5 +32,10 @@ public class Sinner : MonoBehaviour
         {
             return;
         }
+    }
+
+    public void StartDestroy(GameObject by)
+    {
+
     }
 }

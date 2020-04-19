@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
-public class Coal : MonoBehaviour, Destroyable
+public class Pot : MonoBehaviour
 {
-    public float powerCapacity = 100.0f;
+    public int souls = 0;
+    public float power = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -14,11 +16,6 @@ public class Coal : MonoBehaviour, Destroyable
 
     // Update is called once per frame
     void Update()
-    {
-
-    }
-
-    public void StartDestroy(GameObject by)
     {
 
     }

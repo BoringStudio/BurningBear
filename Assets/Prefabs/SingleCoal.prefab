@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5507523797976025865}
   - component: {fileID: 5507523797976025866}
   - component: {fileID: 5507523797976025867}
+  - component: {fileID: 6783527174074658708}
   m_Layer: 0
   m_Name: SingleCoal
   m_TagString: Attachable
@@ -56,6 +57,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c4216b533b85588419402aa8f58b8ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6783527174074658708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5507523797976025864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a96b2e446208c84c90f23652db53064, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &5507523798541900567
