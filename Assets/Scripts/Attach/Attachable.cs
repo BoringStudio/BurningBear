@@ -13,7 +13,7 @@ public class Attachable : MonoBehaviour
     protected GameObject attachmentTarget = null;
 
     public void Attach(GameObject target) {
-        bool success = AttachImpl(target);
+        bool success = OnAttach(target);
         if (success) {
             Debug.Log("Attached successfully");
             attachmentTarget = target;
@@ -22,7 +22,7 @@ public class Attachable : MonoBehaviour
     }
 
     public void Deattach(Vector3 deattachPosition) {
-        bool success = DeattachImpl(deattachPosition);
+        bool success = OnDeattach(deattachPosition);
         if (success) {
             Debug.Log("Deattached successfully");
             attachmentTarget = null;
@@ -30,6 +30,6 @@ public class Attachable : MonoBehaviour
         }
     }
 
-    protected virtual bool AttachImpl(GameObject target) { return true; }
-    protected virtual bool DeattachImpl(Vector3 releasePosition) { return true; }
+    protected virtual bool OnAttach(GameObject target) { return true; }
+    protected virtual bool OnDeattach(Vector3 releasePosition) { return true; }
 }

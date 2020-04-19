@@ -13,12 +13,32 @@ public class CoalAttachController : Attachable
         Assert.IsNotNull(_collider, "[Coal]: Collider is null");
     }
 
-    override protected bool AttachImpl(GameObject target) {
+    void FixedUpdate()
+    {
+        UpdateMovement();
+    }
+
+    void UpdateMovement()
+    {
+        if (!isAttached)
+        {
+            return;
+        }
+        if (attachmentTarget == null)
+        {
+            Debug.LogError("Attachment target is null");
+            return;
+        }
+
+        transform.position = attachmentTarget.transform.position;
+    }
+
+    override protected bool OnAttach(GameObject target) {
         _collider.enabled = false;
         return true;
     }
 
-    override protected bool DeattachImpl(Vector3 releasedPosition) {
+    override protected bool OnDeattach(Vector3 releasedPosition) {
         transform.position = releasedPosition;
         _collider.enabled = true;
         return true;

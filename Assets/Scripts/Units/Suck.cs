@@ -16,7 +16,7 @@ public class Suck : MonoBehaviour
         if (_currentCooldown <= 0)
         {
             _currentCooldown = cooldown;
-            waterArea.Evaporate(transform.position);
+            //waterArea.Evaporate(transform.position);
         }
     }
 }
