@@ -1,28 +1,28 @@
 ﻿using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class WaterArea : MonoBehaviour
 {
-    public WaterMesh waterMesh;
     public int ticksBeforeUpdate = 5;
-    public ComputeShader computeShader;
+    public WaterMesh waterMesh;
     public Material waterMaterial;
+    public Tilemap worldTileMap; 
 
     public int width = 128;
-    public int height = 512;
-    public float heightScale = 0.25f;
+    public int height = 128;
 
     private int _currentTicksBeforeUpdate = 0;
-    private int _baseKernel = 0;
 
-    public ComputeBuffer _cellsBuffer;
     public uint[] _waterMap;
+    public ComputeBuffer _cellsBuffer;
 
-    private readonly uint EVAPORATION_THRESHOLD = 1;
+    private readonly uint EVAPORATION_THRESHOLD = 20;
 
     private readonly uint LEVEL_MASK = 0x00ff;
     private readonly uint SOURCE_MASK = 0x0100;
     private readonly uint WALL_MASK = 0x0200;
-    private readonly uint FLOW_MASK = 0x0C00;
+    private readonly uint FLOW_MASK = 0x0c00;
+    private readonly uint SPREAD_MASK = 0xffff0000;
 
     private readonly uint TOP = 0;
     private readonly uint BOTTOM = 1;
@@ -32,39 +32,32 @@ public class WaterArea : MonoBehaviour
     void Start()
     {
         _waterMap = new uint[width * height];
-        for (uint y = 0; y < height; ++y)
+
+        var origin = transform.position + Vector3.left * width * 0.5f + Vector3.forward * height * 0.5f;
+        for (int y = 0; y < height; ++y)
         {
-            for (uint x = 0; x < width; ++x)
+            for (int x = 0; x < width; ++x) {
+                var worldPosition = origin + Vector3.back * y + Vector3.right * x + (Vector3.right + Vector3.back) * 0.5f;
+
+                if (!worldTileMap.HasTile(worldTileMap.WorldToCell(worldPosition)))
+                {
+                    _waterMap[width * y + x] = WALL_MASK | LEVEL_MASK;
+                }
+            }
+
+            var localOrigin = origin + Vector3.back * y;
+
+            for (int j = 0; j < 4; ++j)
             {
-                uint index = (uint)width * y + x;
-                _waterMap[index] = 0;
+                var gameObject = Instantiate(waterMesh, localOrigin + Vector3.back * j * 0.25f + Vector3.right * Random.Range(0.0f, 0.25f), Quaternion.Euler(60.0f, 0.0f, 0.0f), transform);
+                gameObject.UpdateMesh(width, (uint)y, (uint)(j % 2));
             }
         }
-
-        //for (int i = 0; i < 10; ++i)
-        //{
-        //    _waterMap[width * (y + 2) + x + i - 5] = 10000.0f;
-        //}
-
-        //for (int i = 0; i < 10; ++i)
-        //{
-        //    _waterMap[width * (y - 3) + x + i - 5] = 10000.0f;
-        //}
 
         _cellsBuffer = new ComputeBuffer(_waterMap.Length, sizeof(float));
         _cellsBuffer.SetData(_waterMap);
 
         waterMaterial.SetBuffer("_CellsBuffer", _cellsBuffer);
-
-        _baseKernel = computeShader.FindKernel("CSMain");
-        computeShader.SetBuffer(_baseKernel, "Result", _cellsBuffer);
-
-        var origin = transform.position + Vector3.left * width * 0.5f + Vector3.forward * height * heightScale * 0.5f;
-        for (int i = 0; i < height; ++i)
-        {
-            var gameObject = Instantiate(waterMesh, origin + Vector3.back * heightScale * i + Vector3.right * Random.Range(0.0f, 0.25f), Quaternion.Euler(60.0f, 0.0f, 0.0f), transform);
-            gameObject.UpdateMesh(width, (uint)i);
-        }
     }
 
     void OnDestroy()
@@ -81,7 +74,6 @@ public class WaterArea : MonoBehaviour
             int x = width / 2;
             int y = height / 2;
 
-            //_cellsBuffer.GetData(_waterMap);
             _waterMap[width * (y - 3) + x + 3] = 0xff | SOURCE_MASK;
             _cellsBuffer.SetData(_waterMap);
             waterMaterial.SetBuffer("_CellsBuffer", _cellsBuffer);
@@ -92,7 +84,6 @@ public class WaterArea : MonoBehaviour
             int x = width / 2;
             int y = height / 2;
 
-            //_cellsBuffer.GetData(_waterMap);
             _waterMap[width * y + x] |= 0xff;
             _cellsBuffer.SetData(_waterMap);
             waterMaterial.SetBuffer("_CellsBuffer", _cellsBuffer);
@@ -108,9 +99,33 @@ public class WaterArea : MonoBehaviour
         }
     }
 
+    public void Evaporate(Vector3 worldPoint)
+    {
+        var offset = worldPoint + new Vector3(width / 2, 0, height / 2);
+        var x = (int)offset.x;
+        var y = height - (int)offset.z;
+
+        Debug.Log(x + " " + y);
+
+        var kernel = new uint[] { 3, 5, 7, 9, 9, 9, 7, 5, 3 };
+        for (int i = 0; i < kernel.Length; ++i)
+        {
+            for (int j = 0; j < kernel[i]; ++j)
+            {
+                if (j == 0 || j + 1 == kernel[i])
+                {
+                    _waterMap[width * (y - kernel.Length / 2 + i) + x - kernel[i] / 2 + j] &= ~SPREAD_MASK;
+                }
+                else
+                {
+                    _waterMap[width * (y - kernel.Length / 2 + i) + x - kernel[i] / 2 + j] = 0;
+                }
+            }
+        }
+    }
+
     void UpdateCells()
     {
-        //computeShader.Dispatch(_baseKernel, width, height, 1);
         for (uint y = 0; y < height; ++y)
         {
             for (uint x = 0; x < width; ++x)
@@ -138,38 +153,60 @@ public class WaterArea : MonoBehaviour
                 };
 
                 uint flow = (centerValue & FLOW_MASK) >> 10;
-                var directions = new uint[] { 0, 0, 0, 0 };
-                directions[0] = flow;
-                for (uint i = 0; i < 3; ++i)
-                {
-                    directions[i + 1] = i < flow ? i : i + 1;
-                }
+                var directions = new uint[] { TOP, BOTTOM, LEFT, RIGHT };
 
-                while (true)
+                uint centerSpread = (centerValue & SPREAD_MASK) >> 16;
+                if (centerSpread < 20)
                 {
-                    bool changed = false;
+                    directions[0] = flow;
+                    for (uint i = 0; i < 3; ++i)
+                    {
+                        directions[i + 1] = i < flow ? i : i + 1;
+                    }
+
+                    while (true) {
+                        bool changed = false;
+                        for (uint i = 0; i < 4 && centerLevel > 0; ++i)
+                        {
+                            uint value = values[directions[i]];
+
+                            uint level = value & LEVEL_MASK;
+                            if ((value & (WALL_MASK | SOURCE_MASK | SPREAD_MASK)) == 0 && level < centerLevel)
+                            {
+                                changed = true;
+                                uint delta = (uint)Mathf.Min(Mathf.Min(5, 255 - (int)level), (int)centerLevel);
+
+                                level += delta;
+                                if ((centerValue & SOURCE_MASK) == 0)
+                                {
+                                    centerLevel -= delta;
+                                }
+                                values[directions[i]] = (directions[i] << 10) | (level & LEVEL_MASK);
+                            }
+                        }
+
+                        if (!changed)
+                        {
+                            break;
+                        }
+                    }
+
+                    if ((centerValue & SOURCE_MASK) > 0)
+                    {
+                        centerSpread++;
+                    }
+                }
+                else 
+                {
+                    centerSpread = 0;
                     for (uint i = 0; i < 4 && centerLevel > 0; ++i)
                     {
                         uint value = values[directions[i]];
 
-                        uint level = value & LEVEL_MASK;
-                        if ((value & (WALL_MASK | SOURCE_MASK)) == 0 && level < centerLevel)
+                        if ((value & (WALL_MASK | SOURCE_MASK | SPREAD_MASK)) == 0)
                         {
-                            changed = true;
-                            uint delta = (uint)Mathf.Min(Mathf.Min(5, 255 - (int)level), (int)centerLevel);
-
-                            level += delta;
-                            if ((centerValue & SOURCE_MASK) == 0)
-                            {
-                                centerLevel -= delta;
-                            }
-                            values[directions[i]] = (directions[i] << 10) | (level & LEVEL_MASK);
+                            values[directions[i]] = (directions[i] << 10) | SOURCE_MASK | LEVEL_MASK;
                         }
-                    }
-
-                    if (!changed)
-                    {
-                        break;
                     }
                 }
 
@@ -189,8 +226,13 @@ public class WaterArea : MonoBehaviour
                 {
                     _waterMap[index + 1] = values[RIGHT];
                 }
+
                 if ((centerValue & SOURCE_MASK) == 0) {
                     _waterMap[index] = centerLevel & LEVEL_MASK;
+                }
+                else
+                {
+                    _waterMap[index] = ((centerSpread << 16) & SPREAD_MASK) | SOURCE_MASK | LEVEL_MASK;
                 }
             }
         }

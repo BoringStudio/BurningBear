@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 788485282155379131}
   - component: {fileID: 788485282155379130}
   - component: {fileID: 788485282155379129}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,9 +53,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ac1f2ab216e908438c78b9c0ae35b58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterSprites:
-  - {fileID: 0}
-  lineIndex: 0
 --- !u!23 &788485282155379129
 MeshRenderer:
   m_ObjectHideFlags: 0

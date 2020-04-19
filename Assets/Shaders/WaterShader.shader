@@ -144,6 +144,12 @@
         // LWRP Lit shader.
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
 
+        #define LEVEL_MASK  0x00ff
+        #define SOURCE_MASK 0x0100
+        #define WALL_MASK   0x0200
+
+        #define TEXTURE_OFFSET_MASK 0xf0000000
+
         uniform StructuredBuffer<uint> _CellsBuffer : register(t1);
         uniform float _Shift;
 
@@ -162,7 +168,7 @@
             float4 positionWSAndFogFactor   : TEXCOORD2; // xyz: positionWS, w: vertex fog factor
             half3  normalWS                 : TEXCOORD3;
 
-            half   groundLevel              : COLOR;
+            half2  groundLevel              : COLOR;
 
 #if _NORMALMAP
             half3 tangentWS                 : TEXCOORD4;
@@ -181,37 +187,70 @@
 
             float3 position = input.positionOS.xyz;
 
-            if (position.y > 0) {
-                position.x += (_Shift - 0.5) * 0.25;
-            }
+            uint textureOffset = (input.unitIndex & TEXTURE_OFFSET_MASK) >> 28;
+            uint textureOffsetX = textureOffset & 0x3;
+            uint textureOffsetY = (textureOffset & 0xC) >> 2;
+            float2 uv = (input.uv + float2(textureOffsetX, textureOffsetY)) * 0.25;
 
-            int vertexOffset = input.vertexId % 6;
-            float current = float(_CellsBuffer[input.unitIndex] & 0xff) / 255.0f;
-            if (current > 1000.0f || current < 0.01f) {
-                position.y = 0.0f;
+            uint unitIndex = input.unitIndex & (~TEXTURE_OFFSET_MASK);
+
+            uint cell = _CellsBuffer[unitIndex];
+
+            if ((cell & WALL_MASK) == 0) {
+                if (textureOffsetX % 2) {
+                    if (position.y > 0) {
+                        position.x += _Shift * 0.1;
+                        position.y += _Shift * sin(_Shift * 1.5707) * 0.09f;
+                    }
+                    else {
+                        position.x -= _Shift * 0.1 * 0.5;
+                    }
+                }
+                else {
+                    if (position.y > 0) {
+                        position.x -= _Shift * 0.1;
+                        position.y -= _Shift * sin(_Shift * 1.5707) * 0.09f;
+                    }
+                    else {
+                        position.x += _Shift * 0.1 * 0.5;
+                    }
+                    
+                }
+
+                int vertexOffset = input.vertexId % 6;
+                float current = float(_CellsBuffer[unitIndex] & LEVEL_MASK) / 255.0f;
+                if (current > 1000.0f || current < 0.4f) {
+                    position.y = 0.0f;
+                }
+                else {
+                    current = clamp(current, 0.0, 1.0);
+                    if ((vertexOffset == 0 || vertexOffset == 1) && unitIndex > 0) {
+                        float left = clamp(float(_CellsBuffer[unitIndex - 1] & 0xff) / 255.0f, 0.0, 1.0);
+                        if (left > 1000.0f) {
+                            left = current;
+                        }
+                        position.y += clamp((current + left) * 0.5f, 0.0, 1.0) - 1.0;
+                    }
+                    else if ((vertexOffset == 2 || vertexOffset == 3)) {
+                        position.y += clamp(current, 0.0, 1.0) - 1.0;
+                    }
+                    else if ((vertexOffset == 4 || vertexOffset == 5) && unitIndex + 1 < 512 * 128) {
+                        float right = clamp(float(_CellsBuffer[unitIndex + 1] & 0xff) / 255.0f, 0.0, 1.0);
+                        if (right > 1000.0f) {
+                            right = current;
+                        }
+                        position.y += clamp((current + right) * 0.5f, 0.0, 1.0) - 1.0;
+                    }
+                }
+
+                output.groundLevel.x = current;
             }
             else {
-                current = clamp(current, 0.0, 1.0);
-                if ((vertexOffset == 0 || vertexOffset == 1) && input.unitIndex > 0) {
-                    float left = clamp(float(_CellsBuffer[input.unitIndex - 1] & 0xff) / 255.0f, 0.0, 1.0);
-                    if (left > 1000.0f) {
-                        left = current;
-                    }
-                    position.y += clamp((current + left) * 0.5f, 0.0, 1.0) - 1.0;
-                }
-                else if ((vertexOffset == 2 || vertexOffset == 3)) {
-                    position.y += clamp(current, 0.0, 1.0) - 1.0;
-                }
-                else if ((vertexOffset == 4 || vertexOffset == 5) && input.unitIndex + 1 < 512 * 128) {
-                    float right = clamp(float(_CellsBuffer[input.unitIndex + 1] & 0xff) / 255.0f, 0.0, 1.0);
-                    if (right > 1000.0f) {
-                        right = current;
-                    }
-                    position.y += clamp((current + right) * 0.5f, 0.0, 1.0) - 1.0;
-                }
+                position.y = -1.0f;
+                output.groundLevel.x = 0.0;
             }
 
-            output.groundLevel = position.y;
+            output.groundLevel.y = position.y;
 
             VertexPositionInputs vertexInput = GetVertexPositionInputs(position);
             VertexNormalInputs vertexNormalInput = GetVertexNormalInputs(float3(0.0, 0.0, -1.0), float4(1.0, 0.0, 0.0, 1.0));
@@ -220,7 +259,7 @@
             float fogFactor = ComputeFogFactor(vertexInput.positionCS.z);
 
             // TRANSFORM_TEX is the same as the old shader library.
-            output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
+            output.uv = TRANSFORM_TEX(uv, _BaseMap);
 
             output.positionWSAndFogFactor = float4(vertexInput.positionWS, fogFactor);
             output.normalWS = vertexNormalInput.normalWS;
@@ -295,8 +334,12 @@
 
             // LightingPhysicallyBased computes direct light contribution.
             color += LightingPhysicallyBased(brdfData, mainLight, normalWS, viewDirectionWS);
-            if (input.groundLevel < 0.1) {
-                color *= input.groundLevel / 0.1 + 0.1;
+            if (input.groundLevel.x < 0.5f) {
+                float factor = input.groundLevel.x / 0.5;
+                color *= half3(factor * 0.7, factor * 0.9, factor);
+            }
+            if (input.groundLevel.y < 0.1) {
+                color *= input.groundLevel.y / 0.1 + 0.1;
             }
 
             // Additional lights loop

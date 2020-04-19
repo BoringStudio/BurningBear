@@ -22,7 +22,7 @@ public class WaterMesh : MonoBehaviour
         new VertexAttributeDescriptor(VertexAttribute.TexCoord0, VertexAttributeFormat.Float32, 2),
     };
 
-    public void UpdateMesh(int unitCount, uint lineIndex)
+    public void UpdateMesh(int unitCount, uint lineIndex, uint textureOffset)
     {
         _meshFilter = GetComponent<MeshFilter>();
         if (_meshFilter == null)
@@ -52,32 +52,32 @@ public class WaterMesh : MonoBehaviour
             // 0
             vertices[currentVertex + 0].position = origin + Vector3.up;
             vertices[currentVertex + 0].texCoords = Vector2.up;
-            vertices[currentVertex + 0].unitIndex = unitIndex;
+            vertices[currentVertex + 0].unitIndex = (textureOffset << 28) | unitIndex;
 
             // 1
             vertices[currentVertex + 1].position = origin;
             vertices[currentVertex + 1].texCoords = Vector2.zero;
-            vertices[currentVertex + 1].unitIndex = unitIndex;
+            vertices[currentVertex + 1].unitIndex = (textureOffset << 28) | unitIndex;
 
             // 2
             vertices[currentVertex + 2].position = origin + Vector3.right * 0.5f + Vector3.up;
             vertices[currentVertex + 2].texCoords = Vector2.right * 0.5f + Vector2.up;
-            vertices[currentVertex + 2].unitIndex = unitIndex;
+            vertices[currentVertex + 2].unitIndex = (textureOffset << 28) | unitIndex;
 
             // 3
             vertices[currentVertex + 3].position = origin + Vector3.right * 0.5f;
             vertices[currentVertex + 3].texCoords = Vector2.right * 0.5f;
-            vertices[currentVertex + 3].unitIndex = unitIndex;
+            vertices[currentVertex + 3].unitIndex = (textureOffset << 28) | unitIndex;
 
             // 4
             vertices[currentVertex + 4].position = origin + Vector3.right + Vector3.up;
             vertices[currentVertex + 4].texCoords = Vector2.right + Vector2.up;
-            vertices[currentVertex + 4].unitIndex = unitIndex;
+            vertices[currentVertex + 4].unitIndex = (textureOffset << 28) | unitIndex;
 
             // 5
             vertices[currentVertex + 5].position = origin + Vector3.right;
             vertices[currentVertex + 5].texCoords = Vector2.right;
-            vertices[currentVertex + 5].unitIndex = unitIndex;
+            vertices[currentVertex + 5].unitIndex = (textureOffset << 28) | unitIndex;
         }
 
         var indices = new int[unitCount * 12];
