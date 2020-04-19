@@ -90,7 +90,7 @@ public class WaterArea : Singleton<WaterArea>
 
     public void Evaporate(Vector3 worldPoint)
     {
-        var offset = worldPoint + new Vector3(width / 2 + 1, 0, height / 2 + 1);
+        var offset = worldPoint + new Vector3(width / 2, 0, height / 2);
         var x = (int)offset.x;
         var y = height - (int)offset.z;
 

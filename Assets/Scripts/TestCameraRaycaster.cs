@@ -18,7 +18,7 @@ public class TestCameraRaycaster : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
 
@@ -36,7 +36,9 @@ public class TestCameraRaycaster : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, _groundMask))
             {
                 Vector3 point = hit.point;
+                point.x = Mathf.Ceil(point.x);
                 point.y = 0;
+                point.z = Mathf.Ceil(point.z);
 
                 Instantiate(_suck, point, Quaternion.identity);
             }
