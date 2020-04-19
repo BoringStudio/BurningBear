@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sinner : MonoBehaviour, Destroyable
+public class Sinner : Spawnable
 {
     // Start is called before the first frame update
     void Start()
@@ -34,8 +34,8 @@ public class Sinner : MonoBehaviour, Destroyable
         }
     }
 
-    public void StartDestroy(GameObject by)
-    {
-
-    }
+    protected override void OnSpawnStart(GameObject by) { }
+    protected override void OnSpawnEnd(GameObject by) { }
+    protected override void OnDespawnStart(GameObject by) { }
+    protected override void OnDespawnEnd(GameObject by) { }
 }
