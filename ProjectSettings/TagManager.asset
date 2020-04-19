@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Sinner
+  - Flame
+  - Ground
+  - Unit
+  - Wall
+  - Water
   layers:
   - Default
   - TransparentFX
