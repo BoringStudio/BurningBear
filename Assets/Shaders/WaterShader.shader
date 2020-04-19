@@ -144,7 +144,8 @@
         // LWRP Lit shader.
         #include "Packages/com.unity.render-pipelines.universal/Shaders/LitInput.hlsl"
 
-        uniform StructuredBuffer<float> _CellsBuffer : register(t1);
+        uniform StructuredBuffer<uint> _CellsBuffer : register(t1);
+        uniform float _Shift;
 
         struct Attributes
         {
@@ -160,6 +161,8 @@
             float2 uv                       : TEXCOORD0;
             float4 positionWSAndFogFactor   : TEXCOORD2; // xyz: positionWS, w: vertex fog factor
             half3  normalWS                 : TEXCOORD3;
+
+            half   groundLevel              : COLOR;
 
 #if _NORMALMAP
             half3 tangentWS                 : TEXCOORD4;
@@ -177,15 +180,20 @@
             Varyings output;
 
             float3 position = input.positionOS.xyz;
+
+            if (position.y > 0) {
+                position.x += (_Shift - 0.5) * 0.25;
+            }
+
             int vertexOffset = input.vertexId % 6;
-            float current = _CellsBuffer[input.unitIndex];
+            float current = float(_CellsBuffer[input.unitIndex] & 0xff) / 255.0f;
             if (current > 1000.0f || current < 0.01f) {
                 position.y = 0.0f;
             }
             else {
                 current = clamp(current, 0.0, 1.0);
                 if ((vertexOffset == 0 || vertexOffset == 1) && input.unitIndex > 0) {
-                    float left = clamp(_CellsBuffer[input.unitIndex - 1], 0.0, 1.0);
+                    float left = clamp(float(_CellsBuffer[input.unitIndex - 1] & 0xff) / 255.0f, 0.0, 1.0);
                     if (left > 1000.0f) {
                         left = current;
                     }
@@ -195,13 +203,15 @@
                     position.y += clamp(current, 0.0, 1.0) - 1.0;
                 }
                 else if ((vertexOffset == 4 || vertexOffset == 5) && input.unitIndex + 1 < 512 * 128) {
-                    float right = clamp(_CellsBuffer[input.unitIndex + 1], 0.0, 1.0);
+                    float right = clamp(float(_CellsBuffer[input.unitIndex + 1] & 0xff) / 255.0f, 0.0, 1.0);
                     if (right > 1000.0f) {
                         right = current;
                     }
                     position.y += clamp((current + right) * 0.5f, 0.0, 1.0) - 1.0;
                 }
             }
+
+            output.groundLevel = position.y;
 
             VertexPositionInputs vertexInput = GetVertexPositionInputs(position);
             VertexNormalInputs vertexNormalInput = GetVertexNormalInputs(float3(0.0, 0.0, -1.0), float4(1.0, 0.0, 0.0, 1.0));
@@ -285,6 +295,9 @@
 
             // LightingPhysicallyBased computes direct light contribution.
             color += LightingPhysicallyBased(brdfData, mainLight, normalWS, viewDirectionWS);
+            if (input.groundLevel < 0.1) {
+                color *= input.groundLevel / 0.1 + 0.1;
+            }
 
             // Additional lights loop
 #ifdef _ADDITIONAL_LIGHTS
