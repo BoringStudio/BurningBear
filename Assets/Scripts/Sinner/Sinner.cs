@@ -2,8 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Sinner : MonoBehaviour
+public class Sinner : MonoBehaviour, Attachable
 {
+    public enum State
+    {
+        Grabbed,
+        Released,
+    }
+
+    public State state = State.Released;
+    public Transform grabbedOrigin = null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,9 +25,29 @@ public class Sinner : MonoBehaviour
 
     }
 
+    void FixedUpdate()
+    {
+        switch (state)
+        {
+            case State.Grabbed:
+                if (grabbedOrigin == null)
+                {
+                    Debug.LogError("Grabbed origin is null");
+                    break;
+                }
+
+                transform.position = grabbedOrigin.position;
+                break;
+            case State.Released:
+                // Do nothing
+                break;
+        }
+    }
+
     void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.tag != "Water") {
+        if (collider.gameObject.tag != "Water")
+        {
             return;
         }
 
@@ -27,8 +56,20 @@ public class Sinner : MonoBehaviour
 
     void OnTriggerExit(Collider collider)
     {
-        if (collider.gameObject.tag != "Water") {
+        if (collider.gameObject.tag != "Water")
+        {
             return;
         }
+    }
+
+    public void Attach(Transform origin) {
+        grabbedOrigin = origin;
+        state = Sinner.State.Grabbed;
+    }
+
+    public void Deattach(Vector3 releasedPosition) {
+        grabbedOrigin = null;
+        transform.position = releasedPosition;
+        state = Sinner.State.Released;
     }
 }

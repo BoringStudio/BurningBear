@@ -5,18 +5,12 @@ using UnityEngine.Assertions;
 
 public class Player : MonoBehaviour
 {
-    public Interactable mouseInteractableObject
+    public Attachable attachableObject
     {
-        get => _interactController.mouseInteractableObject;
-        set => _interactController.mouseInteractableObject = value;
+        get => _interactController.attachPoint.attachableObject;
     }
-    public Interactable interactableObject
-    {
-        get => _interactController.interactableObject;
-        set => _interactController.interactableObject = value;
-    }
-    public InteractionPoint interactionPoint {
-        get => _interactController.interactionPoint;
+    public AttachPoint attachPoint {
+        get => _interactController.attachPoint;
     }
 
     public Vector3 cameraRotation = new Vector3(60, 0, 0);
@@ -31,7 +25,7 @@ public class Player : MonoBehaviour
     {
         Normal,
         Build,
-        Grab,
+        Attach,
         Upgrade,
     }
 
