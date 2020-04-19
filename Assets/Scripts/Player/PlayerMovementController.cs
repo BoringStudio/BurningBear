@@ -56,6 +56,11 @@ public class PlayerMovementController : MonoBehaviour
 
     private void UpdateMovement()
     {
+        if (_velocity.magnitude > 0)
+        {
+            Debug.Log(_velocity);
+        }
+
         _rb.MovePosition(_rb.position + _velocity * Time.fixedDeltaTime);
     }
 
