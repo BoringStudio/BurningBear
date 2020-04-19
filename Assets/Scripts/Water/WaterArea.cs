@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class WaterArea : MonoBehaviour
+public class WaterArea : Singleton<WaterArea>
 {
     public int ticksBeforeUpdate = 5;
     public WaterMesh waterMesh;
@@ -13,8 +13,8 @@ public class WaterArea : MonoBehaviour
 
     private int _currentTicksBeforeUpdate = 0;
 
-    public uint[] _waterMap;
-    public ComputeBuffer _cellsBuffer;
+    private uint[] _waterMap;
+    private ComputeBuffer _cellsBuffer;
 
     private readonly uint EVAPORATION_THRESHOLD = 20;
 
@@ -68,26 +68,6 @@ public class WaterArea : MonoBehaviour
     void Update()
     {
         waterMaterial.SetFloat("_Shift", Mathf.Sin(Time.time * 5.0f));
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            int x = width / 2;
-            int y = height / 2;
-
-            _waterMap[width * (y - 3) + x + 3] = 0xff | SOURCE_MASK;
-            _cellsBuffer.SetData(_waterMap);
-            waterMaterial.SetBuffer("_CellsBuffer", _cellsBuffer);
-        }
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            int x = width / 2;
-            int y = height / 2;
-
-            _waterMap[width * y + x] |= 0xff;
-            _cellsBuffer.SetData(_waterMap);
-            waterMaterial.SetBuffer("_CellsBuffer", _cellsBuffer);
-        }
     }
 
     void FixedUpdate()
@@ -97,6 +77,15 @@ public class WaterArea : MonoBehaviour
             UpdateCells();
             _currentTicksBeforeUpdate = ticksBeforeUpdate;
         }
+    }
+
+    public void Liquify(Vector3 worldPoint)
+    {
+        var offset = worldPoint + new Vector3(width / 2 + 1, 0, height / 2 + 1);
+        var x = (int)offset.x;
+        var y = height - (int)offset.z;
+
+        _waterMap[width * y + x] |= SOURCE_MASK | LEVEL_MASK;
     }
 
     public void Evaporate(Vector3 worldPoint)
@@ -131,15 +120,15 @@ public class WaterArea : MonoBehaviour
                 uint index = (uint)width * y + x;
                 uint centerValue = _waterMap[index];
 
+                if ((centerValue & WALL_MASK) > 0)
+                {
+                    continue;
+                }
+
                 uint centerLevel = centerValue & LEVEL_MASK;
                 if (centerLevel < EVAPORATION_THRESHOLD)
                 {
                     _waterMap[index] &= ~LEVEL_MASK;
-                    continue;
-                }
-
-                if ((centerValue & WALL_MASK) > 0)
-                {
                     continue;
                 }
 
