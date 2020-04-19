@@ -7,7 +7,7 @@ public class Player : MonoBehaviour
 {
     public Attachable attachableObject
     {
-        get => _interactController.attachPoint.attachableObject;
+        get => _interactController.attachPoint.attachedObject;
     }
     public AttachPoint attachPoint {
         get => _interactController.attachPoint;

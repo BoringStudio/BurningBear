@@ -59,8 +59,8 @@ public class InputController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        horizontalAxis = Input.GetAxis("Horizontal");
-        verticalAxis = Input.GetAxis("Vertical");
+        horizontalAxis = Input.GetAxisRaw("Horizontal");
+        verticalAxis = Input.GetAxisRaw("Vertical");
 
         interactButtonDown = Input.GetMouseButtonDown(0);
         interactButtonUp = Input.GetMouseButtonUp(0);

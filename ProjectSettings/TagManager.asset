@@ -4,12 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Sinner
   - Flame
   - Ground
   - Unit
   - Wall
   - Water
+  - Attachable
   layers:
   - Default
   - TransparentFX
