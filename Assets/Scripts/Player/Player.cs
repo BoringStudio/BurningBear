@@ -25,7 +25,6 @@ public class Player : MonoBehaviour
     private PlayerInteractController _interactController = null;
     private PlayerMovementController _movementController = null;
 
-    private SpriteRenderer _spriteRenderer = null;
     private Camera _camera = null;
 
     public enum State
@@ -38,17 +37,15 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-        _spriteRenderer = _spriteRenderer ?? gameObject.GetComponentInChildren<SpriteRenderer>();
         _camera = _camera ?? gameObject.GetComponentInChildren<Camera>();
         _interactController = _interactController ?? gameObject.GetComponentInChildren<PlayerInteractController>();
         _movementController = _movementController ?? gameObject.GetComponentInChildren<PlayerMovementController>();
 
-        Assert.IsNotNull(_spriteRenderer, "[Player]: Sprite renderer is null");
         Assert.IsNotNull(_camera, "[Player]: Camera is null");
         Assert.IsNotNull(_interactController, "[Player]: Interact controller is null");
         Assert.IsNotNull(_movementController, "[Player]: Movement controller is null");
 
-        _spriteRenderer.transform.rotation = Quaternion.Euler(cameraRotation);
+        transform.GetChild(0).rotation = Quaternion.Euler(cameraRotation);
         _camera.transform.rotation = Quaternion.Euler(cameraRotation);
     }
 

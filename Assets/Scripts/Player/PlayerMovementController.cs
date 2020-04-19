@@ -17,13 +17,13 @@ public class PlayerMovementController : MonoBehaviour
 
     private void Awake()
     {
-        _spriteRenderer = _spriteRenderer ?? gameObject.GetComponentInChildren<SpriteRenderer>();
+        //_spriteRenderer = _spriteRenderer ?? gameObject.GetComponentInChildren<SpriteRenderer>();
         _inputController = _inputController ?? gameObject.GetComponent<InputController>();
-        _animator = _animator ?? _spriteRenderer?.gameObject.GetComponent<Animator>();
+        _animator = _animator ?? gameObject.GetComponentInChildren<Animator>();
         _player = _player ?? gameObject.GetComponent<Player>();
         _rb = _rb ?? gameObject.GetComponentInChildren<Rigidbody>();
 
-        Assert.IsNotNull(_spriteRenderer, "[PlayerMovementController]: Sprite renderer is null");
+        //Assert.IsNotNull(_spriteRenderer, "[PlayerMovementController]: Sprite renderer is null");
         Assert.IsNotNull(_inputController, "[PlayerMovementController]: Input controller is null");
         Assert.IsNotNull(_animator, "[PlayerMovementController]: Animator is null");
         Assert.IsNotNull(_player, "[PlayerMovementController]: Player is null");
@@ -42,7 +42,7 @@ public class PlayerMovementController : MonoBehaviour
         _velocity.x = _inputController.horizontalAxis;
         _velocity.z = _inputController.verticalAxis;
 
-        _velocity *= _maxSpeed;
+        _velocity = _velocity.normalized * _maxSpeed;
 
         _animator.SetFloat("Speed", _velocity.magnitude);
         _animator.SetFloat("Vertical", _inputController.verticalAxis);
@@ -78,11 +78,11 @@ public class PlayerMovementController : MonoBehaviour
 
     private void TurnToLeft()
     {
-        _spriteRenderer.flipX = true;
+        //_spriteRenderer.flipX = true;
     }
 
     private void TurnToRight()
     {
-        _spriteRenderer.flipX = false;
+        //_spriteRenderer.flipX = false;
     }
 }

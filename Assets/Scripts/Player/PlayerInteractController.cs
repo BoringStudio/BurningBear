@@ -7,7 +7,7 @@ public class PlayerInteractController : MonoBehaviour
 {
     public Interactable mouseInteractableObject = null;
     public Interactable interactableObject = null;
-    public InteractionPoint interactionPoint= null;
+    public InteractionPoint interactionPoint = null;
 
     public Transform mouseOriginTransform = null;
     public float mouseInteractionRadius = 5f;
