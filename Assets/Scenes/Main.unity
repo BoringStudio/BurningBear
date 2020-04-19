@@ -121,30 +121,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &1416591 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6781419834773840724, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-    type: 3}
-  m_PrefabInstance: {fileID: 1514442105}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1416594
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1416591}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a75d251954f649b4f834f450bb17fad2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _originOrder: 100
-  _precision: 1
-  _offset: 4
-  _runOnlyOnce: 0
-  _sortingSelector: 0
-  _sortingAxis: 1
 --- !u!1 &219887918
 GameObject:
   m_ObjectHideFlags: 0
@@ -70244,66 +70220,6 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
---- !u!1 &426066400 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1985908187769151822, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-    type: 3}
-  m_PrefabInstance: {fileID: 1514442105}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &426066403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 426066400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a75d251954f649b4f834f450bb17fad2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _originOrder: 100
-  _precision: 1
-  _offset: 0
-  _runOnlyOnce: 0
-  _sortingSelector: 0
-  _sortingAxis: 1
---- !u!114 &656463657 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 507358183, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-    type: 3}
-  m_PrefabInstance: {fileID: 1514442105}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e3ef20b7c8b688479372d80ac0b19a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &1098496383 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1385325307264476347, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-    type: 3}
-  m_PrefabInstance: {fileID: 1514442105}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1098496386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1098496383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a75d251954f649b4f834f450bb17fad2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _originOrder: 100
-  _precision: 1
-  _offset: 5
-  _runOnlyOnce: 0
-  _sortingSelector: 0
-  _sortingAxis: 1
 --- !u!1 &1153402969
 GameObject:
   m_ObjectHideFlags: 0
@@ -70642,21 +70558,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1114826556108453768, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-        type: 3}
-      propertyPath: m_SpriteSortPoint
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1419825878388256628, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-        type: 3}
-      propertyPath: m_SpriteSortPoint
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2170856127719412686, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-        type: 3}
-      propertyPath: m_SpriteSortPoint
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 3130671036376368367, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -70717,47 +70618,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 3537536080734132012, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-        type: 3}
-      propertyPath: attachPoint
-      value: 
-      objectReference: {fileID: 656463657}
-    - target: {fileID: 7019722264139030233, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-        type: 3}
-      propertyPath: m_SpriteSortPoint
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8076064003113733529, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-        type: 3}
-      propertyPath: m_SpriteSortPoint
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4bdb3473cdc4eae4fa927d014bcd1cad, type: 3}
---- !u!1 &1656081041 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5539045675226269369, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-    type: 3}
-  m_PrefabInstance: {fileID: 1514442105}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1656081044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1656081041}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a75d251954f649b4f834f450bb17fad2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _originOrder: 100
-  _precision: 1
-  _offset: 1
-  _runOnlyOnce: 0
-  _sortingSelector: 0
-  _sortingAxis: 1
 --- !u!1 &1739525029
 GameObject:
   m_ObjectHideFlags: 0
@@ -70935,30 +70797,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
---- !u!1 &1837317237 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1375637967730327151, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
-    type: 3}
-  m_PrefabInstance: {fileID: 1514442105}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1837317240
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1837317237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a75d251954f649b4f834f450bb17fad2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _originOrder: 100
-  _precision: 1
-  _offset: 3
-  _runOnlyOnce: 0
-  _sortingSelector: 0
-  _sortingAxis: 1
 --- !u!1 &1874099237
 GameObject:
   m_ObjectHideFlags: 0

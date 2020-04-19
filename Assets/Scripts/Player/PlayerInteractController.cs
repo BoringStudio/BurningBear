@@ -29,7 +29,7 @@ public class PlayerInteractController : MonoBehaviour
         _inputController = _inputController ?? gameObject.GetComponentInChildren<InputController>();
         _camera = _camera ?? gameObject.GetComponentInChildren<Camera>();
         attachPoint = attachPoint ?? gameObject.GetComponentInChildren<AttachPoint>();
-        mouseOriginInteractionPoint = mouseOriginInteractionPoint ?? _player?.transform;
+        mouseOriginInteractionPoint = mouseOriginInteractionPoint ?? transform;
 
         Assert.IsNotNull(_player, "[PlayerInteractController]: Player is null");
         Assert.IsNotNull(_inputController, "[PlayerInteractController]: Input controller is null");

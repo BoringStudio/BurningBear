@@ -10,20 +10,20 @@ public class PlayerMovementController : MonoBehaviour
     private Player _player = null;
     private Rigidbody _rb = null;
     private Animator _animator = null;
-    private SpriteRenderer _spriteRenderer = null;
+    private PlayerBodyChanger _bodyChanger = null;
 
     private InputController _inputController = null;
     private Vector3 _velocity = Vector3.zero;
 
     private void Awake()
     {
-        //_spriteRenderer = _spriteRenderer ?? gameObject.GetComponentInChildren<SpriteRenderer>();
-        _inputController = _inputController ?? gameObject.GetComponent<InputController>();
-        _animator = _animator ?? gameObject.GetComponentInChildren<Animator>();
-        _player = _player ?? gameObject.GetComponent<Player>();
-        _rb = _rb ?? gameObject.GetComponentInChildren<Rigidbody>();
+        _bodyChanger = _bodyChanger ?? GetComponentInChildren<PlayerBodyChanger>();
+        _inputController = _inputController ?? GetComponent<InputController>();
+        _animator = _animator ?? GetComponentInChildren<Animator>();
+        _player = _player ?? GetComponent<Player>();
+        _rb = _rb ?? GetComponentInChildren<Rigidbody>();
 
-        //Assert.IsNotNull(_spriteRenderer, "[PlayerMovementController]: Sprite renderer is null");
+        Assert.IsNotNull(_bodyChanger, "[PlayerMovementController]: Body changer is null");
         Assert.IsNotNull(_inputController, "[PlayerMovementController]: Input controller is null");
         Assert.IsNotNull(_animator, "[PlayerMovementController]: Animator is null");
         Assert.IsNotNull(_player, "[PlayerMovementController]: Player is null");
@@ -73,15 +73,41 @@ public class PlayerMovementController : MonoBehaviour
         {
             TurnToLeft();
         }
+
+
+        if (_inputController.verticalAxis > 0)
+        {
+            TurnToUp();
+        }
+        else if (_inputController.verticalAxis <= 0)
+        {
+            TurnToDown();
+        }
     }
 
     private void TurnToLeft()
     {
-        //_spriteRenderer.flipX = true;
+        _animator.transform.localScale = new Vector3(
+            Mathf.Abs(_animator.transform.localScale.x),
+            _animator.transform.localScale.y,
+            _animator.transform.localScale.z);
     }
 
     private void TurnToRight()
     {
-        //_spriteRenderer.flipX = false;
+        _animator.transform.localScale = new Vector3(
+            Mathf.Abs(_animator.transform.localScale.x) * -1,
+            _animator.transform.localScale.y,
+            _animator.transform.localScale.z);
+    }
+
+    private void TurnToUp()
+    {
+        _bodyChanger.ToUp();
+    }
+
+    private void TurnToDown()
+    {
+        _bodyChanger.ToDown();
     }
 }
