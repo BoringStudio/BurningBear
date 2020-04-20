@@ -14,8 +14,12 @@ public class SinnerAttachHandler : Attachable
         Assert.IsNotNull(_collider, "[Sinner]: Collider is null");
     }
 
-    void FixedUpdate()
+    void LateUpdate()
     {
+        if (isAttached)
+        {
+            transform.position = attachmentTarget.transform.position;
+        }
     }
 
     protected override bool OnAttach(GameObject target)
@@ -28,7 +32,6 @@ public class SinnerAttachHandler : Attachable
     {
         transform.position = releasedPosition;
         _collider.enabled = true;
-
         return true;
     }
 }
