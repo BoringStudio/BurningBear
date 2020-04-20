@@ -9,6 +9,12 @@ public class Dragon : Spawnable
     [SerializeField] private DragonFire _firePrefab;
     [SerializeField] private Transform _fireSpawningPoint;
 
+    [SerializeField] public float requiredPower = 10.0f;
+    [SerializeField] public float powerConsumptionTime = 10.0f;
+
+    private float _curPowerConsumptionTime = 0.0f;
+    private Pot _pot = null;
+
     public float timeToLive = 9999999999.0f;
     public float cooldown = 1.0f;
 
@@ -27,6 +33,7 @@ public class Dragon : Spawnable
     void Awake()
     {
         _waterArea = WaterArea.Instance;
+        _pot = _pot ?? Pot.Instance;
 
         _materialPropertyBlock = new MaterialPropertyBlock();
         _meshRenderer = GetComponentInChildren<MeshRenderer>();
@@ -35,6 +42,18 @@ public class Dragon : Spawnable
 
         var animationEventNotifier = GetComponentInChildren<AnimationEventNotifier>();
         animationEventNotifier.action.AddListener(Fire);
+    }
+
+    void Update()
+    {
+        _isActive = _pot.power >= requiredPower;
+
+        _curPowerConsumptionTime += Time.deltaTime;
+        if (_curPowerConsumptionTime >= powerConsumptionTime && _isActive)
+        {
+            _pot.TakePower(requiredPower);
+            _curPowerConsumptionTime = 0.0f;
+        }
     }
 
     private void FixedUpdate()
