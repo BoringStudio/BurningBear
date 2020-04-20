@@ -18,11 +18,12 @@ public class WaterArea : Singleton<WaterArea>
 
     private readonly uint EVAPORATION_THRESHOLD = 20;
 
-    private readonly uint LEVEL_MASK = 0x00ff;
-    private readonly uint SOURCE_MASK = 0x0100;
-    private readonly uint WALL_MASK = 0x0200;
-    private readonly uint FLOW_MASK = 0x0c00;
-    private readonly uint SPREAD_MASK = 0xffff0000;
+    private readonly uint LEVEL_MASK    = 0x000000ff;
+    private readonly uint SOURCE_MASK   = 0x00000100;
+    private readonly uint WALL_MASK     = 0x00000200;
+    private readonly uint FLOW_MASK     = 0x00000c00;
+    private readonly uint DRAIN_MASK    = 0x0000f000;
+    private readonly uint SPREAD_MASK   = 0xffff0000;
 
     private readonly uint TOP = 0;
     private readonly uint BOTTOM = 1;
@@ -85,7 +86,7 @@ public class WaterArea : Singleton<WaterArea>
         var x = (int)offset.x;
         var y = height - (int)offset.z;
 
-        _waterMap[width * y + x] |= SOURCE_MASK | LEVEL_MASK;
+        _waterMap[width * y + x] = SOURCE_MASK | LEVEL_MASK;
     }
 
     public void Evaporate(Vector3 worldPoint)
@@ -94,18 +95,21 @@ public class WaterArea : Singleton<WaterArea>
         var x = (int)offset.x;
         var y = height - (int)offset.z;
 
-        var kernel = new uint[] { 3, 5, 7, 9, 9, 9, 7, 5, 3 };
+        var kernel = new uint[] { 5, 7, 9, 9, 9, 7, 5 };
         for (int i = 0; i < kernel.Length; ++i)
         {
             for (int j = 0; j < kernel[i]; ++j)
             {
-                if (j == 0 || j + 1 == kernel[i])
+                var index = width * (y - kernel.Length / 2 + i) + x - kernel[i] / 2 + j;
+                var current = _waterMap[index];
+
+                if ((current & WALL_MASK) == 0)
                 {
-                    _waterMap[width * (y - kernel.Length / 2 + i) + x - kernel[i] / 2 + j] &= ~SPREAD_MASK;
-                }
-                else
-                {
-                    _waterMap[width * (y - kernel.Length / 2 + i) + x - kernel[i] / 2 + j] = 0;
+                    if ((current & SOURCE_MASK) != 0)
+                    {
+                        current &= ~(SPREAD_MASK | SOURCE_MASK);
+                    }                    
+                    _waterMap[index] = ((3 << 12) & DRAIN_MASK) | (current & ~DRAIN_MASK);
                 }
             }
         }
@@ -126,11 +130,16 @@ public class WaterArea : Singleton<WaterArea>
                 }
 
                 uint centerLevel = centerValue & LEVEL_MASK;
-                if (centerLevel < EVAPORATION_THRESHOLD)
+                uint centerDrain = (centerValue & DRAIN_MASK) >> 12;
+                if (centerDrain == 0 && centerLevel < EVAPORATION_THRESHOLD)
                 {
                     _waterMap[index] &= ~LEVEL_MASK;
                     continue;
                 }
+
+                bool centerIsSource = (centerValue & SOURCE_MASK) != 0;
+                uint centerFlow = (centerValue & FLOW_MASK) >> 10;
+                uint centerSpread = (centerValue & SPREAD_MASK) >> 16;
 
                 var values = new[]{
                     y > 0 ? _waterMap[index - width] : 0, // TOP
@@ -139,61 +148,119 @@ public class WaterArea : Singleton<WaterArea>
                     x + 1 < width ?  _waterMap[index + 1] : 0, // RIGHT
                 };
 
-                uint flow = (centerValue & FLOW_MASK) >> 10;
                 var directions = new uint[] { TOP, BOTTOM, LEFT, RIGHT };
-
-                uint centerSpread = (centerValue & SPREAD_MASK) >> 16;
-                if (centerSpread < 200)
+                directions[0] = centerFlow;
+                for (uint i = 0; i < 3; ++i)
                 {
-                    directions[0] = flow;
-                    for (uint i = 0; i < 3; ++i)
+                    directions[i + 1] = i < centerFlow ? i : i + 1;
+                }
+
+                if (centerDrain == 0)
+                {
+                    if (centerSpread < 200)
                     {
-                        directions[i + 1] = i < flow ? i : i + 1;
-                    }
-
-                    while (true) {
-                        bool changed = false;
-                        for (uint i = 0; i < 4 && centerLevel > 0; ++i)
+                        while (true)
                         {
-                            uint value = values[directions[i]];
-
-                            uint level = value & LEVEL_MASK;
-                            if ((value & (WALL_MASK | SOURCE_MASK | SPREAD_MASK)) == 0 && level < centerLevel)
+                            bool changed = false;
+                            for (uint i = 0; i < 4 && centerLevel > 0; ++i)
                             {
-                                changed = true;
-                                uint delta = (uint)Mathf.Min(Mathf.Min(5, 255 - (int)level), (int)centerLevel);
+                                uint value = values[directions[i]];
+                                uint valueLevel = value & LEVEL_MASK;
+                                bool valueIsSource = (value & SOURCE_MASK) != 0;
+                                bool valueIsWall = (value & WALL_MASK) != 0;
+                                uint valueDrain = (value & DRAIN_MASK) >> 12;
 
-                                level += delta;
-                                if ((centerValue & SOURCE_MASK) == 0)
+                                if (!valueIsWall && !valueIsSource && valueLevel < centerLevel && valueDrain == 0)
                                 {
-                                    centerLevel -= delta;
+                                    changed = true;
+
+                                    uint delta = (uint)Mathf.Min(Mathf.Min(5, LEVEL_MASK - (int)valueLevel), (int)centerLevel);
+                                    valueLevel += delta;
+
+                                    if (!centerIsSource)
+                                    {
+                                        centerLevel -= delta;
+                                    }
+
+                                    values[directions[i]] = (directions[i] << 10) | (valueLevel & LEVEL_MASK);
                                 }
-                                values[directions[i]] = (directions[i] << 10) | (level & LEVEL_MASK);
+                            }
+
+                            if (!changed)
+                            {
+                                break;
                             }
                         }
 
-                        if (!changed)
+                        if (centerIsSource)
                         {
-                            break;
+                            centerSpread++;
                         }
                     }
-
-                    if ((centerValue & SOURCE_MASK) > 0)
+                    else
                     {
-                        centerSpread++;
+                        centerSpread = 0;
+                        for (uint i = 0; i < 4; ++i)
+                        {
+                            uint value = values[directions[i]];
+
+                            if ((value & (DRAIN_MASK | WALL_MASK | SOURCE_MASK)) == 0)
+                            {
+                                values[directions[i]] = (directions[i] << 10) | SOURCE_MASK | LEVEL_MASK;
+                            }
+                        }
                     }
                 }
-                else 
+                else
                 {
-                    centerSpread = 0;
-                    for (uint i = 0; i < 4 && centerLevel > 0; ++i)
+                    if (centerSpread < 200)
                     {
-                        uint value = values[directions[i]];
-
-                        if ((value & (WALL_MASK | SOURCE_MASK | SPREAD_MASK)) == 0)
+                        if (centerLevel > 0)
                         {
-                            values[directions[i]] = (directions[i] << 10) | SOURCE_MASK | LEVEL_MASK;
+                            centerLevel -= (uint)Mathf.Min((int)centerValue, 1);
+                        } else
+                        {
+                            centerLevel = 0;
                         }
+
+                        for (uint i = 0; i < 4; ++i)
+                        {
+                            uint value = values[directions[i]];
+                            uint valueLevel = value & LEVEL_MASK;
+                            bool valueIsWall = (value & WALL_MASK) != 0;
+
+                            if (!valueIsWall)
+                            {
+                                uint delta = (uint)Mathf.Min((int)valueLevel, 1);
+                                value -= delta;
+
+                                values[directions[i]] = value;
+                            }
+                        }
+
+                        centerSpread++;
+                    }
+                    else
+                    {
+                        centerSpread = 0;
+
+                        if (centerDrain > 1)
+                        {
+                            for (uint i = 0; i < 4; ++i)
+                            {
+                                uint value = values[directions[i]];
+                                uint valueLevel = value & LEVEL_MASK;
+                                bool valueIsWall = (value & WALL_MASK) != 0;
+                                uint valueDrain = (value & DRAIN_MASK) >> 12;
+
+                                if (!valueIsWall && valueDrain < centerDrain - 1)
+                                {
+                                    values[directions[i]] = (centerDrain - 1) << 12 | valueLevel;
+                                }
+                            }
+                        }
+
+                        centerDrain--;
                     }
                 }
 
@@ -214,12 +281,13 @@ public class WaterArea : Singleton<WaterArea>
                     _waterMap[index + 1] = values[RIGHT];
                 }
 
-                if ((centerValue & SOURCE_MASK) == 0) {
-                    _waterMap[index] = centerLevel & LEVEL_MASK;
+                if (centerIsSource)
+                {
+                    _waterMap[index] = ((centerSpread << 16) & SPREAD_MASK) | SOURCE_MASK | LEVEL_MASK;
                 }
                 else
                 {
-                    _waterMap[index] = ((centerSpread << 16) & SPREAD_MASK) | SOURCE_MASK | LEVEL_MASK;
+                    _waterMap[index] = ((centerSpread << 16) & SPREAD_MASK) | ((centerDrain << 12) & DRAIN_MASK) | ((centerFlow << 10) & FLOW_MASK) | centerLevel;
                 }
             }
         }
