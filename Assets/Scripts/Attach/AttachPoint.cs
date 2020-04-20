@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class AttachPoint : MonoBehaviour
 {
+    public bool hasAttachedObject{
+        get => attachedObject != null;
+    }
     public Attachable attachedObject = null;
 
-    public void AttachObject(Attachable toAttach, GameObject to) {
-        toAttach.Attach(to);
+    public void AttachObject(Attachable toAttach) {
+        toAttach.Attach(gameObject);
         attachedObject = toAttach;
     }
 

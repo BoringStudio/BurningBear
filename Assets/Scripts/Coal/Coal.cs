@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Coal : Spawnable
+[RequireComponent(typeof(Attachable))]
+[RequireComponent(typeof(Spawnable))]
+public class Coal : MonoBehaviour
 {
     public float powerCapacity = 100.0f;
 
@@ -17,9 +19,4 @@ public class Coal : Spawnable
     {
 
     }
-
-    protected override void OnSpawnStart(GameObject by) { }
-    protected override void OnSpawnEnd(GameObject by) { }
-    protected override void OnDespawnStart(GameObject by) { }
-    protected override void OnDespawnEnd(GameObject by) { }
 }

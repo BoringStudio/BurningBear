@@ -6,8 +6,7 @@ public class Attachable : MonoBehaviour
 {
     public bool isAttached
     {
-        get;
-        private set;
+        get => attachmentTarget != null;
     }
 
     protected GameObject attachmentTarget = null;
@@ -17,7 +16,6 @@ public class Attachable : MonoBehaviour
         if (success) {
             Debug.Log("Attached successfully");
             attachmentTarget = target;
-            isAttached = true;
         }
     }
 
@@ -26,10 +24,10 @@ public class Attachable : MonoBehaviour
         if (success) {
             Debug.Log("Deattached successfully");
             attachmentTarget = null;
-            isAttached = false;
         }
     }
 
+    
     protected virtual bool OnAttach(GameObject target) { return true; }
     protected virtual bool OnDeattach(Vector3 releasePosition) { return true; }
 }

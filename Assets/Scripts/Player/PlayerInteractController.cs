@@ -15,17 +15,18 @@ public class PlayerInteractController : MonoBehaviour
     private Player _player = null;
     private InputController _inputController = null;
     private Camera _camera = null;
+    private Inferno _inferno = null;
 
 
     private const string flameTag = "Flame";
     private const string groundTag = "Ground";
     private const string attachableTag = "Attachable";
-    private const string wallTag = "Wall";
-    private const string waterTag = "Water";
+    private const string coalSourceTag = "CoalSource";
 
     void Awake()
     {
-        _player = _player ?? gameObject.GetComponentInChildren<Player>();
+        _inferno = _inferno ?? Inferno.Instance;
+        _player = _player ?? Player.Instance;
         _inputController = _inputController ?? gameObject.GetComponentInChildren<InputController>();
         _camera = _camera ?? gameObject.GetComponentInChildren<Camera>();
         attachPoint = attachPoint ?? gameObject.GetComponentInChildren<AttachPoint>();
@@ -71,7 +72,10 @@ public class PlayerInteractController : MonoBehaviour
                 {
                     switch (_player.state)
                     {
+                        case Player.State.WaitingToAttach:
+                            break;
                         case Player.State.Normal:
+                            TryMine(hit);
                             TryAttachObject(hit);
                             TryUpgradeUnit(hit);
                             break;
@@ -90,8 +94,28 @@ public class PlayerInteractController : MonoBehaviour
         }
     }
 
-    void TryMine(RaycastHit hit) {
+    void TryMine(RaycastHit hit)
+    {
+        Debug.Log("Start try mine coal source...");
 
+        if (hit.collider.gameObject.tag != coalSourceTag)
+        {
+            Debug.Log("Hitted game object not coal source");
+            return;
+        }
+
+        var coalSource = hit.collider.gameObject.GetComponent<CoalSource>();
+        if (coalSource == null)
+        {
+            Debug.LogError("Coal source component not found when mine");
+            return;
+        }
+
+        if (coalSource.Mine()) {
+            _player.state = Player.State.WaitingToAttach;
+        }
+
+        Debug.Log("End try mine coal source");
     }
 
     void TryAttachObject(RaycastHit hit)
@@ -104,14 +128,14 @@ public class PlayerInteractController : MonoBehaviour
             return;
         }
 
-        var attachable = hit.collider.gameObject.GetComponentInChildren<Attachable>();
+        var attachable = hit.collider.gameObject.GetComponent<Attachable>();
         if (attachable == null)
         {
             Debug.LogError("Attachable component not found when attach");
             return;
         }
 
-        attachPoint.AttachObject(attachable, attachPoint.gameObject);
+        attachPoint.AttachObject(attachable);
         _player.state = Player.State.Attach;
 
         Debug.Log("End try attach object");

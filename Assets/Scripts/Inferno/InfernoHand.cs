@@ -41,6 +41,7 @@ public class InfernoHand : MonoBehaviour
     private Vector3 _attachmentOffset;
     private float _endHeight;
     private float _timer = 0.0f;
+    private Transform _followTarget = null;
 
     private MaterialPropertyBlock _materialPropertyBlock;
 
@@ -66,7 +67,8 @@ public class InfernoHand : MonoBehaviour
                 _handTransform.localPosition = _handTransform.localPosition + Vector3.down * _downSpeed * Time.deltaTime;
                 if (_handTransform.localPosition.y <= _endHeight)
                 {
-                    if (_action == Action.Spawn) {
+                    if (_action == Action.Spawn)
+                    {
                         Release();
                     }
                     if (_action == Action.Despawn)
@@ -123,15 +125,21 @@ public class InfernoHand : MonoBehaviour
             var position = _attachmentOffset + _spawnPoint.position;
             _attachedEntity.transform.position = new Vector3(position.x, Mathf.Max(position.y, 0.0f), position.z);
         }
+
+        if (_followTarget != null)
+        {
+            transform.position = _followTarget.position;
+        }
     }
 
-    public void PlaceEntity(Spawnable entity)
+    public void PlaceEntity(Spawnable entity, Transform followTarget)
     {
+        _followTarget = followTarget;
         _entity = entity;
         _attachedEntity = entity;
         _action = Action.Spawn;
 
-        var attachmentPoint = entity.HandAttachmentPoint;
+        var attachmentPoint = entity.handAttachmentPoint;
         _attachmentOffset = entity.transform.position - attachmentPoint.position;
 
         _endHeight = _handTransform.InverseTransformPoint(_spawnPoint.position - _attachmentOffset).y;
@@ -147,7 +155,14 @@ public class InfernoHand : MonoBehaviour
         _entity = entity;
         _action = Action.Despawn;
 
+        var attachmentPoint = entity.handAttachmentPoint;
+        _attachmentOffset = entity.transform.position - attachmentPoint.position;
+
+        _endHeight = _handTransform.InverseTransformPoint(_spawnPoint.position - _attachmentOffset).y;
+
         MoveDown();
+
+        _entity.DoDespawnStart(gameObject);
     }
 
     private void MoveUp()

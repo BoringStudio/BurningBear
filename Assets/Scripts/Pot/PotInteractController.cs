@@ -38,6 +38,9 @@ public class PotInteractController : MonoBehaviour
         }
 
         _pot.power += coal.powerCapacity;
+
+        var coalSpawnHandler = coal.GetComponent<Spawnable>();
+        coalSpawnHandler.DoDespawnImmediately(gameObject);
     }
 
     void TryOnSinnerEnter(Collider collider)
@@ -49,5 +52,8 @@ public class PotInteractController : MonoBehaviour
         }
 
         _pot.souls += 1;
+
+        var sinnerSpawnHandler = sinner.GetComponent<Spawnable>();
+        sinnerSpawnHandler.DoDespawnImmediately(gameObject);
     }
 }

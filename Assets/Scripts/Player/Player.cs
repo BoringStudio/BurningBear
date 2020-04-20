@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-public class Player : MonoBehaviour
+public class Player : Singleton<Player>
 {
     public Attachable attachableObject
     {
         get => _interactController.attachPoint.attachedObject;
     }
-    public AttachPoint attachPoint {
+    public AttachPoint attachPoint
+    {
         get => _interactController.attachPoint;
     }
 
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
         Normal,
         Build,
         Attach,
+        WaitingToAttach,
         Upgrade,
     }
 
@@ -53,5 +55,11 @@ public class Player : MonoBehaviour
     void Update()
     {
 
+    }
+
+    public void AddToHand(Attachable target)
+    {
+        attachPoint.AttachObject(target);
+        state = State.Attach;
     }
 }
