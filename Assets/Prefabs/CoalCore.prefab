@@ -170,8 +170,9 @@ GameObject:
   - component: {fileID: 3771878850040604875}
   - component: {fileID: 3771878850040604872}
   - component: {fileID: 761344564428534107}
+  - component: {fileID: 7380441132319451059}
   m_Layer: 0
-  m_Name: CoalSource
+  m_Name: CoalCore
   m_TagString: CoalSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -204,9 +205,9 @@ CapsuleCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.84
-  m_Height: 3.38
+  m_Height: 1.68
   m_Direction: 1
-  m_Center: {x: 0, y: 1.06, z: 0.3}
+  m_Center: {x: 0, y: 0, z: 0.27}
 --- !u!114 &761344564428534107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,13 +220,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5242c929e73684c469da30f17b2a6db3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _handAttachmentPoint: {fileID: 7593723904594273531}
   _coalPrefab: {fileID: 6783527174074658708, guid: 5c1396872cd4149468d9a20f33fd9ece,
     type: 3}
   maxProductionProgress: 100
   currentProductionProgress: 0
   productionRate: 50
-  coalCapacity: 20
+  coalCapacity: 2
+--- !u!114 &7380441132319451059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3771878850040604874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2634e99ca0b62894bb0cad17f5d88c81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handAttachmentPoint: {fileID: 7593723904594273531}
+  spawner: {fileID: 0}
 --- !u!1 &4651189093450436087
 GameObject:
   m_ObjectHideFlags: 0

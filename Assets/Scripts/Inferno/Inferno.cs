@@ -6,7 +6,7 @@ public class Inferno : Singleton<Inferno>
 
     public T Spawn<T>(T prefab, Vector3 position, Transform followTarget) where T : Spawnable
     {
-        var entity = Instantiate(prefab);
+        var entity = Instantiate(prefab, position, Quaternion.identity);
         var hand = Instantiate(_handPrefab, position, Quaternion.identity);
         hand.PlaceEntity(entity, followTarget);
 
