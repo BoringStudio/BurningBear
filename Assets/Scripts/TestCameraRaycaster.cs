@@ -9,11 +9,13 @@ public class TestCameraRaycaster : MonoBehaviour
 
     private Camera _camera;
     private WaterArea _waterArea;
+    private Inferno _inferno;
 
     private void Awake()
     {
         _camera = GetComponent<Camera>();
         _waterArea = WaterArea.Instance;
+        _inferno = GetComponent<Inferno>();
     }
 
     void Update()
@@ -40,7 +42,7 @@ public class TestCameraRaycaster : MonoBehaviour
                 point.y = 0;
                 point.z = Mathf.Ceil(point.z);
 
-                Instantiate(_suck, point, Quaternion.identity);
+                _inferno.Spawn(_suck, point);
             }
         }
     }

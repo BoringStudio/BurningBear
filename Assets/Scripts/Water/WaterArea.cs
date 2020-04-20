@@ -143,7 +143,7 @@ public class WaterArea : Singleton<WaterArea>
                 var directions = new uint[] { TOP, BOTTOM, LEFT, RIGHT };
 
                 uint centerSpread = (centerValue & SPREAD_MASK) >> 16;
-                if (centerSpread < 20)
+                if (centerSpread < 200)
                 {
                     directions[0] = flow;
                     for (uint i = 0; i < 3; ++i)

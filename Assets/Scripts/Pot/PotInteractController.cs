@@ -37,7 +37,6 @@ public class PotInteractController : MonoBehaviour
             return;
         }
 
-        coal.StartDestroy(gameObject);
         _pot.power += coal.powerCapacity;
     }
 
@@ -49,7 +48,6 @@ public class PotInteractController : MonoBehaviour
             return;
         }
 
-        sinner.StartDestroy(gameObject);
         _pot.souls += 1;
     }
 }

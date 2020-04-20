@@ -1,9 +1,16 @@
 ﻿using UnityEngine;
 
-public class Suck : MonoBehaviour
+public class Suck : Spawnable
 {
+    public override Transform HandAttachmentPoint
+    {
+        get => _handAttachmentPoint;
+    }
+
     [SerializeField] public Texture2D _idleTexture;
     [SerializeField] public Texture2D[] _suckTextures;
+
+    [SerializeField] public Transform _handAttachmentPoint;
 
     public float cooldown = 10;
 

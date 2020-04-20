@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Spawnable : MonoBehaviour
 {
+    virtual public Transform HandAttachmentPoint { get; }
+
     public void DoSpawnStart(GameObject by)
     {
         OnSpawnStart(by);
