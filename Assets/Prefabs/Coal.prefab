@@ -60,7 +60,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4216b533b85588419402aa8f58b8ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachable: {fileID: 0}
 --- !u!114 &6783527174074658708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 590f0ec091b419441939038a7cde85f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _handAttachmentPoint: {fileID: 6174696047635613035}
+  handAttachmentPoint: {fileID: 6174696047635613035}
 --- !u!1 &5507523798541900567
 GameObject:
   m_ObjectHideFlags: 0

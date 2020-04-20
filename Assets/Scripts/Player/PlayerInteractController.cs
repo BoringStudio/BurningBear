@@ -96,7 +96,7 @@ public class PlayerInteractController : MonoBehaviour
 
     void TryMine(RaycastHit hit)
     {
-        Debug.Log("Start try mine coal source...");
+        Debug.Log("Start try mine coal core...");
 
         if (hit.collider.gameObject.tag != coalSourceTag)
         {
@@ -104,18 +104,18 @@ public class PlayerInteractController : MonoBehaviour
             return;
         }
 
-        var coalSource = hit.collider.gameObject.GetComponent<CoalSource>();
-        if (coalSource == null)
+        var coalCore = hit.collider.gameObject.GetComponent<CoalCore>();
+        if (coalCore == null)
         {
-            Debug.LogError("Coal source component not found when mine");
+            Debug.LogError("Coal core component not found when mine");
             return;
         }
 
-        if (coalSource.Mine()) {
+        if (coalCore.Mine()) {
             _player.state = Player.State.WaitingToAttach;
         }
 
-        Debug.Log("End try mine coal source");
+        Debug.Log("End try mine coal core");
     }
 
     void TryAttachObject(RaycastHit hit)

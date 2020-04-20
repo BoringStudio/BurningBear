@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 [RequireComponent(typeof(Collider))]
-public class CoalSource : Spawnable
+[RequireComponent(typeof(CoalCoreSpawnHandler))]
+public class CoalCore : MonoBehaviour
 {
     [SerializeField] private Coal _coalPrefab;
+
+    private CoalCoreSpawnHandler _spawnHandler = null;
 
     public float maxProductionProgress = 100.0f;
     public float currentProductionProgress = 0.0f;
@@ -21,16 +25,23 @@ public class CoalSource : Spawnable
     private Player _player;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _inferno = _inferno ?? Inferno.Instance;
         _player = _player ?? Player.Instance;
+        _spawnHandler = _spawnHandler ?? GetComponent<CoalCoreSpawnHandler>();
+
+        Assert.IsNotNull(_spawnHandler, "[CoalCore] Spawn handler is null");
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+
+    public CoalCoreSpawnHandler AsSpawnable() {
+        return _spawnHandler ?? GetComponent<CoalCoreSpawnHandler>();
     }
 
     public bool Mine()
@@ -48,7 +59,7 @@ public class CoalSource : Spawnable
 
         if (isEmpty)
         {
-            DespawnCoalSource();
+            DespawnCoalCore();
         }
 
         return result;
@@ -62,8 +73,8 @@ public class CoalSource : Spawnable
             _player.attachPoint.transform);
     }
 
-    private void DespawnCoalSource()
+    private void DespawnCoalCore()
     {
-        _inferno.Despawn(this);
+        _inferno.Despawn(_spawnHandler);
     }
 }

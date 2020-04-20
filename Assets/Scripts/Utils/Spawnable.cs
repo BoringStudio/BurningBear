@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class Spawnable : MonoBehaviour
 {
-    public Transform handAttachmentPoint { get => _handAttachmentPoint; }
-    [SerializeField] private Transform _handAttachmentPoint;
+    public Transform handAttachmentPoint;
 
     public bool despawned
     {
