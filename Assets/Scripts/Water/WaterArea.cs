@@ -22,6 +22,7 @@ public class WaterArea : Singleton<WaterArea>
     private readonly uint SOURCE_MASK = 0x0100;
     private readonly uint WALL_MASK = 0x0200;
     private readonly uint FLOW_MASK = 0x0c00;
+    private readonly uint DRAIN_MASK = 0xf000;
     private readonly uint SPREAD_MASK = 0xffff0000;
 
     private readonly uint TOP = 0;
@@ -85,7 +86,7 @@ public class WaterArea : Singleton<WaterArea>
         var x = (int)offset.x;
         var y = height - (int)offset.z;
 
-        _waterMap[width * y + x] |= SOURCE_MASK | LEVEL_MASK;
+        _waterMap[width * y + x] = SOURCE_MASK | LEVEL_MASK;
     }
 
     public void Evaporate(Vector3 worldPoint)
@@ -94,18 +95,18 @@ public class WaterArea : Singleton<WaterArea>
         var x = (int)offset.x;
         var y = height - (int)offset.z;
 
-        var kernel = new uint[] { 3, 5, 7, 9, 9, 9, 7, 5, 3 };
+        var kernel = new uint[] { 5, 7, 9, 9, 9, 7, 5 };
         for (int i = 0; i < kernel.Length; ++i)
         {
             for (int j = 0; j < kernel[i]; ++j)
             {
-                if (j == 0 || j + 1 == kernel[i])
+                var index = width * (y - kernel.Length / 2 + i) + x - kernel[i] / 2 + j;
+                var current = _waterMap[index];
+
+                if ((current & WALL_MASK) == 0)
                 {
-                    _waterMap[width * (y - kernel.Length / 2 + i) + x - kernel[i] / 2 + j] &= ~SPREAD_MASK;
-                }
-                else
-                {
-                    _waterMap[width * (y - kernel.Length / 2 + i) + x - kernel[i] / 2 + j] = 0;
+                    current = (0b1111 << 12) | (current & ~(SPREAD_MASK | SOURCE_MASK));
+                    _waterMap[index] = current;
                 }
             }
         }
@@ -126,7 +127,7 @@ public class WaterArea : Singleton<WaterArea>
                 }
 
                 uint centerLevel = centerValue & LEVEL_MASK;
-                if (centerLevel < EVAPORATION_THRESHOLD)
+                if ((centerLevel & DRAIN_MASK) == 0 && centerLevel < EVAPORATION_THRESHOLD)
                 {
                     _waterMap[index] &= ~LEVEL_MASK;
                     continue;
@@ -138,6 +139,8 @@ public class WaterArea : Singleton<WaterArea>
                     x > 0 ? _waterMap[index - 1] : 0, // LEFT
                     x + 1 < width ?  _waterMap[index + 1] : 0, // RIGHT
                 };
+
+                uint suck = (centerValue & DRAIN_MASK) >> 12;
 
                 uint flow = (centerValue & FLOW_MASK) >> 10;
                 var directions = new uint[] { TOP, BOTTOM, LEFT, RIGHT };
@@ -157,19 +160,42 @@ public class WaterArea : Singleton<WaterArea>
                         {
                             uint value = values[directions[i]];
 
-                            uint level = value & LEVEL_MASK;
-                            if ((value & (WALL_MASK | SOURCE_MASK | SPREAD_MASK)) == 0 && level < centerLevel)
+                            if ((value & (SPREAD_MASK | WALL_MASK | SOURCE_MASK)) == 0)
                             {
-                                changed = true;
-                                uint delta = (uint)Mathf.Min(Mathf.Min(5, 255 - (int)level), (int)centerLevel);
-
-                                level += delta;
-                                if ((centerValue & SOURCE_MASK) == 0)
+                                uint level = value & LEVEL_MASK;
+                                if (suck == 0)
                                 {
-                                    centerLevel -= delta;
+                                    if (level < centerLevel && (value & DRAIN_MASK) == 0)
+                                    {
+                                        changed = true;
+                                        uint delta = (uint)Mathf.Min(Mathf.Min(5, 255 - (int)level), (int)centerLevel);
+                                        level += delta;
+
+                                        if ((centerValue & SOURCE_MASK) == 0)
+                                        {
+                                            centerLevel -= delta;
+                                        }
+
+                                        values[directions[i]] = (directions[i] << 10) | (level & LEVEL_MASK);
+                                    }
                                 }
-                                values[directions[i]] = (directions[i] << 10) | (level & LEVEL_MASK);
+                                else {
+                                    uint delta = (uint)Mathf.Min(20, (int)level);
+                                    level -= delta;
+                                    centerLevel -= (uint)Mathf.Min(20, centerLevel);
+                                    values[directions[i]] = (directions[i] << 10) | (level & LEVEL_MASK);
+                                }
                             }
+                            else if (suck != 0 && (value & (SPREAD_MASK | SOURCE_MASK)) != 0)
+                            {
+                                values[directions[i]] = value & ~(SPREAD_MASK | SOURCE_MASK);
+                            }
+                        }
+
+                        if (suck > 0)
+                        {
+                            suck--;
+                            break;
                         }
 
                         if (!changed)
@@ -190,7 +216,7 @@ public class WaterArea : Singleton<WaterArea>
                     {
                         uint value = values[directions[i]];
 
-                        if ((value & (WALL_MASK | SOURCE_MASK | SPREAD_MASK)) == 0)
+                        if ((value & (DRAIN_MASK | WALL_MASK | SOURCE_MASK | SPREAD_MASK)) == 0)
                         {
                             values[directions[i]] = (directions[i] << 10) | SOURCE_MASK | LEVEL_MASK;
                         }
@@ -215,7 +241,7 @@ public class WaterArea : Singleton<WaterArea>
                 }
 
                 if ((centerValue & SOURCE_MASK) == 0) {
-                    _waterMap[index] = centerLevel & LEVEL_MASK;
+                    _waterMap[index] = ((suck << 12) & DRAIN_MASK) | centerLevel & LEVEL_MASK;
                 }
                 else
                 {
