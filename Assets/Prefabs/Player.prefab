@@ -107,7 +107,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2105655725034373407}
-  - component: {fileID: 4532212164451669664}
   - component: {fileID: 3994398754325848715}
   - component: {fileID: 7609694814868530968}
   m_Layer: 0
@@ -131,22 +130,6 @@ Transform:
   m_Father: {fileID: 3130671036376368367}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!114 &4532212164451669664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2696460469667754055}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db4630f3fd31f8a4c91d84ca5d8730c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _handAttachmentPoint: {fileID: 0}
-  _idleTexture: {fileID: 0}
-  _suckTextures: []
-  cooldown: 1
 --- !u!23 &3994398754325848715
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -278,6 +261,9 @@ MonoBehaviour:
   attachPoint: {fileID: 507358183}
   mouseOriginInteractionPoint: {fileID: 3130671036376368367}
   mouseInteractionRadius: 5
+  interactibleLayer:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &3537536080734132015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,6 +315,7 @@ GameObject:
   - component: {fileID: 3537536082262738418}
   - component: {fileID: 3537536082262738429}
   - component: {fileID: 3673465329082779974}
+  - component: {fileID: 660041813}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -432,6 +419,22 @@ MonoBehaviour:
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
   m_Version: 2
+--- !u!114 &660041813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3537536082262738428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e149587d78cab240932c05bf2a42d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _suck: {fileID: 5324392732808091583, guid: 1379f4c44b2e4d447a96e107bd77d95d, type: 3}
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &1656081044
 MonoBehaviour:
   m_ObjectHideFlags: 0

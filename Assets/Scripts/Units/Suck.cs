@@ -46,7 +46,7 @@ public class Suck : Spawnable
         if (_currentCooldown <= 0)
         {
             _currentCooldown = cooldown;
-            _waterArea.Evaporate(transform.position);
+            _waterArea.EvaporateCircle(transform.position);
 
             _isSucking = true;
             _currentFrameTime = 0.0f;

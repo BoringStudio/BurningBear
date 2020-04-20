@@ -6,6 +6,9 @@ public class Dragon : Spawnable
     [SerializeField] private Color _originColor;
     [SerializeField] private Color _dyingColor;
 
+    [SerializeField] private DragonFire _firePrefab;
+    [SerializeField] private Transform _fireSpawningPoint;
+
     public float timeToLive = 10.0f;
     public float cooldown = 1.0f;
 
@@ -56,7 +59,15 @@ public class Dragon : Spawnable
 
     public void Fire()
     {
-        Debug.Log("FIRE");
+        _waterArea.EvaporateSector(transform.position, 0);
+
+        var step = Mathf.PI / 5;
+        for (int i = -3; i < 2; ++i)
+        {
+            var direction = (Vector3.left * 5 + Vector3.forward * i - Vector3.forward * 2).normalized;
+            var fire = Instantiate(_firePrefab, _fireSpawningPoint.transform.position + Random.Range(0.0f, 1.0f) * Vector3.right, Quaternion.identity);
+            fire.direction = direction;
+        }
 
         _isShooting = false;
     }

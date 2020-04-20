@@ -30,6 +30,16 @@ public class WaterArea : Singleton<WaterArea>
     private readonly uint LEFT = 2;
     private readonly uint RIGHT = 3;
 
+    private readonly int[] CIRCLE_KERNEL = new int[]
+    {
+        5, 7, 9, 9, 9, 7, 5
+    };
+
+    private readonly int[] SECTOR_KERNEL = new int[]
+    {
+        1, 3, 3, 5, 5, 5
+    };
+
     void Start()
     {
         _waterMap = new uint[width * height];
@@ -89,18 +99,47 @@ public class WaterArea : Singleton<WaterArea>
         _waterMap[width * y + x] = SOURCE_MASK | LEVEL_MASK;
     }
 
-    public void Evaporate(Vector3 worldPoint)
+    public void EvaporateSector(Vector3 worldPoint, int direction)
     {
         var offset = worldPoint + new Vector3(width / 2, 0, height / 2);
         var x = (int)offset.x;
         var y = height - (int)offset.z;
 
-        var kernel = new uint[] { 5, 7, 9, 9, 9, 7, 5 };
-        for (int i = 0; i < kernel.Length; ++i)
+        switch (direction)
         {
-            for (int j = 0; j < kernel[i]; ++j)
+            case 0:
+                for (int i = 0; i < SECTOR_KERNEL.Length; ++i)
+                {
+                    for (int j = 0; j < SECTOR_KERNEL[i]; ++j)
+                    {
+                        var index = width * (y - SECTOR_KERNEL[i] / 2 + j) + x - i;
+                        var current = _waterMap[index];
+
+                        if ((current & WALL_MASK) == 0)
+                        {
+                            if ((current & SOURCE_MASK) != 0)
+                            {
+                                current &= ~(SPREAD_MASK | SOURCE_MASK);
+                            }
+                            _waterMap[index] = ((3 << 12) & DRAIN_MASK) | (current & ~DRAIN_MASK);
+                        }
+                    }
+                }
+                break;
+        }
+    }
+
+    public void EvaporateCircle(Vector3 worldPoint)
+    {
+        var offset = worldPoint + new Vector3(width / 2, 0, height / 2);
+        var x = (int)offset.x;
+        var y = height - (int)offset.z;
+
+        for (int i = 0; i < CIRCLE_KERNEL.Length; ++i)
+        {
+            for (int j = 0; j < CIRCLE_KERNEL[i]; ++j)
             {
-                var index = width * (y - kernel.Length / 2 + i) + x - kernel[i] / 2 + j;
+                var index = width * (y - CIRCLE_KERNEL.Length / 2 + i) + x - CIRCLE_KERNEL[i] / 2 + j;
                 var current = _waterMap[index];
 
                 if ((current & WALL_MASK) == 0)

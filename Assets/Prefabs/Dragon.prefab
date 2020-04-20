@@ -32,7 +32,7 @@ Transform:
   - {fileID: 9155730879724468882}
   - {fileID: 1631040805747194759}
   m_Father: {fileID: 9155730878928840250}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
 --- !u!95 &1467437470876562393
 Animator:
@@ -67,18 +67,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2868010294149468270}
-        m_MethodName: Fire
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
+--- !u!1 &4411544877838384291
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5550249978880440805}
+  m_Layer: 0
+  m_Name: FireSpawningPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5550249978880440805
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4411544877838384291}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.389, y: 0.751, z: 0.174}
+  m_LocalScale: {x: 0.33333334, y: 0.33333337, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9155730879724468882}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5033795469569704309
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,8 +315,8 @@ Transform:
   m_LocalPosition: {x: 4.407895, y: 0.00000011920929, z: 0.19684926}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 3785827267886931559}
   - {fileID: 9155730880338122138}
+  - {fileID: 3785827267886931559}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -327,9 +346,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424e3efb47f2abf47b1eb96be8d7a881, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _handAttachmentPoint: {fileID: 1631040805747194759}
+  handAttachmentPoint: {fileID: 1631040805747194759}
   _originColor: {r: 1, g: 1, b: 1, a: 0}
   _dyingColor: {r: 1, g: 0.6666667, b: 0.2216981, a: 0}
+  _firePrefab: {fileID: 640745886273934199, guid: 1547f1f9e3348e44f9df9c5e703ebbb9,
+    type: 3}
+  _fireSpawningPoint: {fileID: 5550249978880440805}
   timeToLive: 10
   cooldown: 1
 --- !u!1 &9155730879724468876
@@ -363,6 +385,7 @@ Transform:
   m_Children:
   - {fileID: 5033795469887317194}
   - {fileID: 5033795469569704306}
+  - {fileID: 5550249978880440805}
   m_Father: {fileID: 3785827267886931559}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -443,7 +466,7 @@ Transform:
   m_LocalScale: {x: 4.04, y: 0.57837, z: 1}
   m_Children: []
   m_Father: {fileID: 9155730878928840250}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!23 &9155730880338122136
 MeshRenderer:

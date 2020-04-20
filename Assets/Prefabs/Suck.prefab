@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4630f3fd31f8a4c91d84ca5d8730c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _handAttachmentPoint: {fileID: 1978634}
+  handAttachmentPoint: {fileID: 1978634}
   _idleTexture: {fileID: 2800000, guid: 8ae6e696aeefdf34490bb600897661a0, type: 3}
   _suckTextures:
   - {fileID: 2800000, guid: d2880ef455f74194d96dd9b1b389ba14, type: 3}
