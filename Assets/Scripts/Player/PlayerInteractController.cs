@@ -121,7 +121,7 @@ public class PlayerInteractController : MonoBehaviour
             return;
         }
 
-        var attachable = hit.collider.gameObject.GetComponent<Attachable>();
+        var attachable = hit.collider.gameObject.GetComponentInParent<Attachable>();
         if (attachable == null)
         {
             Debug.LogError("Attachable component not found when attach");

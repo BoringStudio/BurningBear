@@ -43,9 +43,9 @@ GameObject:
   - component: {fileID: 1742320079}
   - component: {fileID: 1742320078}
   - component: {fileID: 1742320081}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Sinner
-  m_TagString: Attachable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -221,9 +221,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3720119170938666431}
   - component: {fileID: 7436378634462193338}
-  m_Layer: 0
+  - component: {fileID: 8270925306656733407}
+  m_Layer: 11
   m_Name: Origin
-  m_TagString: Untagged
+  m_TagString: Attachable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -256,6 +257,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7c3a875e94036a4e9206d06e9481aa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &8270925306656733407
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9103654827613611011}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.65, y: 1.9, z: 0.27}
+  m_Center: {x: -0.17, y: 1.06, z: 0}
 --- !u!1001 &358645306578977616
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -318,7 +318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -328,7 +328,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.8980392, g: 0.8980392, b: 0.8980392, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.87726015, b: 0.8041765, a: 1}
     m_PressedColor: {r: 0.7735849, g: 0.5931862, b: 0.49991098, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.8784314, b: 0.80784315, a: 1}
+    m_SelectedColor: {r: 0.7176471, g: 0.26666668, b: 0.22745098, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -344,10 +344,22 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 4911071150557827535}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: SetUnit
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2868010294149468270, guid: a34909229fa512045bfb8776fb59aa29,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: Spawnable, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4911071150592519407
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,7 +489,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -487,7 +499,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.8980392, g: 0.8980392, b: 0.8980392, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.87726015, b: 0.8041765, a: 1}
     m_PressedColor: {r: 0.7735849, g: 0.5931862, b: 0.49991098, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.8784314, b: 0.80784315, a: 1}
+    m_SelectedColor: {r: 0.7169812, g: 0.26342604, b: 0.22659309, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -503,10 +515,22 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 4911071150596636568}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: SetUnit
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 5324392732808091583, guid: 1379f4c44b2e4d447a96e107bd77d95d,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: Spawnable, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4911071150658766717
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,7 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -605,7 +629,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0.8980392, g: 0.8980392, b: 0.8980392, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.87726015, b: 0.8041765, a: 1}
     m_PressedColor: {r: 0.7735849, g: 0.5931862, b: 0.49991098, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.8784314, b: 0.80784315, a: 1}
+    m_SelectedColor: {r: 0.7176471, g: 0.26666668, b: 0.22745098, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -621,7 +645,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 4911071150658766715}
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
