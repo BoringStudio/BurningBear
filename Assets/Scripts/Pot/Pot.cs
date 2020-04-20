@@ -8,15 +8,34 @@ public class Pot : MonoBehaviour
     public int souls = 0;
     public float power = 0;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-
     }
 
-    // Update is called once per frame
-    void Update()
+    public void TossObject(GameObject go)
     {
+        Coal coal = go.GetComponent<Coal>();
+        if (coal != null) {
+            TossCoal(coal);
+            return;
+        }
+        
+        Sinner sinner = go.GetComponent<Sinner>();
+        if (sinner != null) {
+            TossSinner(sinner);
+            return;
+        }
+    }
 
+    void TossCoal(Coal coal)
+    {
+        power += coal.powerCapacity;
+        coal.AsSpawnable().DoDespawnImmediately(gameObject);
+    }
+
+    void TossSinner(Sinner sinner)
+    {
+        souls += 1;
+        sinner.AsSpawnable().DoDespawnImmediately(gameObject);
     }
 }

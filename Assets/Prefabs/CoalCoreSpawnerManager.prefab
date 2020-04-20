@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1495424531464422357}
   - component: {fileID: 1495424531464422356}
   m_Layer: 0
-  m_Name: CoalCoreSpawners
+  m_Name: CoalCoreSpawnerManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,8 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5759a642492c84da041ed8c1b40f92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minTimeToSpawn: 20
-  _maxTimeToSpawn: 100
+  _minTimeToSpawn: 1
+  _maxTimeToSpawn: 2
   _maxActiveCoalCoreInstances: 10
 --- !u!1001 &5064311348461826279
 PrefabInstance:

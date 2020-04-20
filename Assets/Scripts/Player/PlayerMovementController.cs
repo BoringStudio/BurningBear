@@ -18,7 +18,7 @@ public class PlayerMovementController : MonoBehaviour
     private void Awake()
     {
         _bodyChanger = _bodyChanger ?? GetComponentInChildren<PlayerBodyChanger>();
-        _inputController = _inputController ?? GetComponent<InputController>();
+        _inputController = _inputController ?? InputController.Instance;
         _animator = _animator ?? GetComponentInChildren<Animator>();
         _player = _player ?? GetComponent<Player>();
         _rb = _rb ?? GetComponentInChildren<Rigidbody>();

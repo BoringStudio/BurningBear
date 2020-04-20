@@ -9,7 +9,7 @@ public class Attachable : MonoBehaviour
         get => attachmentTarget != null;
     }
 
-    protected GameObject attachmentTarget = null;
+    public GameObject attachmentTarget = null;
 
     public void Attach(GameObject target) {
         bool success = OnAttach(target);
