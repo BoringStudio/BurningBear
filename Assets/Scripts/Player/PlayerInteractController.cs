@@ -10,7 +10,7 @@ public class PlayerInteractController : MonoBehaviour
 
     public Transform mouseOriginInteractionPoint = null;
     public float mouseInteractionRadius = 5f;
-
+    public LayerMask interactibleLayer;
 
     private Player _player = null;
     private InputController _inputController = null;
@@ -58,7 +58,7 @@ public class PlayerInteractController : MonoBehaviour
             RaycastHit hit;
             Ray ray = _camera.ScreenPointToRay(_inputController.mousePosition);
 
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit, 100.0f, interactibleLayer))
             {
                 var hittedGameObject = hit.collider.gameObject;
                 var hittedTag = hittedGameObject.tag;

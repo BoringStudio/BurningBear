@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5507523797976025867}
   - component: {fileID: 6783527174074658708}
   - component: {fileID: 2716271756044978548}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Coal
   m_TagString: Attachable
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 5507523798541900568}
   - component: {fileID: 5507523798541900570}
   - component: {fileID: 5507523798541900569}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -175,7 +175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6174696047635613035}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AttachPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

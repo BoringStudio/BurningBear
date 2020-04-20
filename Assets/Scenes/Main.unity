@@ -133,7 +133,7 @@ GameObject:
   - component: {fileID: 287128723}
   - component: {fileID: 287128722}
   - component: {fileID: 287128721}
-  m_Layer: 9
+  m_Layer: 11
   m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -66702,6 +66702,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoalCoreSpawner (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3771878850040604875, guid: 4f785df2a8e410b478c887a6a4d7a3a2,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4f785df2a8e410b478c887a6a4d7a3a2, type: 3}
 --- !u!1 &1401726342
@@ -66907,6 +66912,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3537536080734132012, guid: 4bdb3473cdc4eae4fa927d014bcd1cad,
+        type: 3}
+      propertyPath: interactibleLayer.m_Bits
+      value: 2048
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4532212164451669664, guid: 4bdb3473cdc4eae4fa927d014bcd1cad, type: 3}
