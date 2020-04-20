@@ -9,6 +9,7 @@ public class CursorController : Singleton<CursorController>
     [SerializeField] private Texture2D _buildingCursor;
     [SerializeField] private Texture2D _miningCursor;
     [SerializeField] private Texture2D _grabCursor;
+    [SerializeField] private Texture2D _upgradeCursor;
 
     private Player _player = null;
     private GameSettings _gameSettings = null;
@@ -24,6 +25,7 @@ public class CursorController : Singleton<CursorController>
         Assert.IsNotNull(_buildingCursor, "[CursorController]: Building cursor texture is null");
         Assert.IsNotNull(_miningCursor, "[CursorController]: Mining cursor texture is null");
         Assert.IsNotNull(_grabCursor, "[CursorController]: Grab cursor texture is null");
+        Assert.IsNotNull(_upgradeCursor, "[CursorController]: Upgrade cursor texture is null");
 
         SetNormalCursor();
     }
@@ -45,6 +47,14 @@ public class CursorController : Singleton<CursorController>
             else if (hittedTag == _gameSettings.attachableTag)
             {
                 SetGrabCursor();
+            }
+            else if (hittedTag == _gameSettings.groundTag && BuildingController.Instance.currentBuilding)
+            {
+                SetBuildingCursor();
+            }
+            else if (hittedTag == _gameSettings.unitTag)
+            {
+                SetUpgradeCursor();
             }
             else
             {
@@ -71,5 +81,10 @@ public class CursorController : Singleton<CursorController>
     public void SetGrabCursor()
     {
         Cursor.SetCursor(_grabCursor, Vector2.zero, CursorMode.Auto);
+    }
+
+    public void SetUpgradeCursor()
+    {
+        Cursor.SetCursor(_upgradeCursor, Vector2.zero, CursorMode.Auto);
     }
 }

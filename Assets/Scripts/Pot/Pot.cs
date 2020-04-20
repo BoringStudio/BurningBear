@@ -5,8 +5,8 @@ using UnityEngine.Assertions;
 
 public class Pot : Singleton<Pot>
 {
-    public int souls = 0;
-    public float power = 0;
+    public int souls { get; private set; } = 0;
+    public float power { get; private set; } = 0;
 
     [SerializeField] private float _maxSmokingDuration = 10.0f;
     [SerializeField] private float _maxSmokingRate = 10.0f;
@@ -59,7 +59,6 @@ public class Pot : Singleton<Pot>
 
     void TossCoal(Coal coal)
     {
-
         power += coal.powerCapacity;
         coal.AsSpawnable().DoDespawnImmediately(gameObject);
     }
@@ -70,6 +69,11 @@ public class Pot : Singleton<Pot>
         
         souls += 1;
         sinner.AsSpawnable().DoDespawnImmediately(gameObject);
+    }
+
+    public void TakeSouls(int spent)
+    {
+        souls -= spent;
     }
 
     void EnableBigSmoking()

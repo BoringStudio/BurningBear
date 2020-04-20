@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1978634}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: attach_point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,9 +41,9 @@ GameObject:
   - component: {fileID: 4239033999829454750}
   - component: {fileID: 4239033999829454749}
   - component: {fileID: 5324392732808091583}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Suck
-  m_TagString: Untagged
+  m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -114,7 +114,7 @@ GameObject:
   - component: {fileID: 4239034000625013558}
   - component: {fileID: 4239034000112490409}
   - component: {fileID: 4239034000112490423}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 4239034001104534590}
   - component: {fileID: 4239034001104534588}
   - component: {fileID: 4239034001104534589}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

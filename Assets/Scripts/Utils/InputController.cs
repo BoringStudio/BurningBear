@@ -24,6 +24,16 @@ public class InputController : Singleton<InputController>
         get;
         private set;
     }
+    public bool releaseButtonDown
+    {
+        get;
+        private set;
+    }
+    public bool releaseButtonUp
+    {
+        get;
+        private set;
+    }
     public bool firstButtonPressed
     {
         get;
@@ -50,13 +60,6 @@ public class InputController : Singleton<InputController>
         private set;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
         horizontalAxis = Input.GetAxisRaw("Horizontal");
@@ -64,6 +67,9 @@ public class InputController : Singleton<InputController>
 
         interactButtonDown = Input.GetMouseButtonDown(0);
         interactButtonUp = Input.GetMouseButtonUp(0);
+
+        releaseButtonDown = Input.GetMouseButtonDown(1);
+        releaseButtonUp = Input.GetMouseButtonUp(1);
 
         firstButtonPressed = Input.GetKeyDown(KeyCode.Alpha1);
         secondButtonPressed = Input.GetKeyDown(KeyCode.Alpha2);

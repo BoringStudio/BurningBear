@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3785827267886931559}
   - component: {fileID: 1467437470876562393}
   - component: {fileID: 3016162780181551432}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5550249978880440805}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: FireSpawningPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 5033795469569704306}
   - component: {fileID: 5033795469569704304}
   - component: {fileID: 5033795469569704307}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: sprite_wing_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 5033795469887317194}
   - component: {fileID: 5033795469887317192}
   - component: {fileID: 5033795469887317195}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: sprite_wing_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,7 +265,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1631040805747194759}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AttachPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,9 +297,9 @@ GameObject:
   - component: {fileID: 9155730878928840250}
   - component: {fileID: 9155730878928840249}
   - component: {fileID: 2868010294149468270}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Dragon
-  m_TagString: Untagged
+  m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -365,7 +365,7 @@ GameObject:
   - component: {fileID: 9155730879724468882}
   - component: {fileID: 9155730879178456589}
   - component: {fileID: 9155730879178456595}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -447,7 +447,7 @@ GameObject:
   - component: {fileID: 9155730880338122138}
   - component: {fileID: 9155730880338122136}
   - component: {fileID: 9155730880338122137}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -36,6 +36,8 @@ public class InfernoHand : MonoBehaviour
     [SerializeField] private Transform _spawnPoint;
     [SerializeField] private Transform _handTransform;
 
+    [SerializeField] private Transform _shadowTransform;
+
     private Spawnable _entity;
     private Spawnable _attachedEntity;
     private Vector3 _attachmentOffset;
@@ -152,6 +154,11 @@ public class InfernoHand : MonoBehaviour
         _endHeight = _handTransform.InverseTransformPoint(_spawnPoint.position - _attachmentOffset).y;
 
         MoveDown();
+
+        if (followTarget)
+        {
+            Destroy(_shadowTransform.gameObject);
+        }
 
         _entity.DoSpawnStart(gameObject);
         SetTexture(_textureGrabbed);

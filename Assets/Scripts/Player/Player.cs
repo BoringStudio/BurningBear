@@ -32,7 +32,6 @@ public class Player : Singleton<Player>
         Build,
         Attach,
         WaitingToAttach,
-        Upgrade,
     }
 
     void Awake()
@@ -51,13 +50,11 @@ public class Player : Singleton<Player>
         _camera.transform.rotation = Quaternion.Euler(GameSettings.Instance.cameraRotation);
     }
 
-    // Start is called before the first frame update
     void Start()
     {
 
     }
 
-    // Update is called once per frame
     void Update()
     {
 

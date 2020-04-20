@@ -33,13 +33,6 @@ public class PlayerInteractController : MonoBehaviour
         Assert.IsNotNull(mouseOriginInteractionPoint, "[PlayerInteractController]: Mouse origin interaction point is null");
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
         UpdateMouseInteract();
@@ -47,6 +40,12 @@ public class PlayerInteractController : MonoBehaviour
 
     void UpdateMouseInteract()
     {
+        if (_inputController.releaseButtonDown && _player.state == Player.State.Build)
+        {
+            BuildingController.Instance.SetUnit(null);
+            _player.state = Player.State.Normal;
+        }
+
         if (_inputController.interactButtonDown)
         {
             RaycastHit hit;
@@ -80,9 +79,6 @@ public class PlayerInteractController : MonoBehaviour
                             break;
                         case Player.State.Build:
                             TryBuildUnit(hit);
-                            break;
-                        case Player.State.Upgrade:
-                            TryUpgradeUnit(hit);
                             break;
                     }
                 }
@@ -160,7 +156,7 @@ public class PlayerInteractController : MonoBehaviour
     {
         Debug.Log("Start try toss to pot...");
 
-        if (hit.collider.gameObject.tag != _gameSettings.flameTag)
+        if (!hit.collider.gameObject.CompareTag(_gameSettings.flameTag))
         {
             Debug.Log("Hitted game object not flame");
             return;
@@ -185,6 +181,48 @@ public class PlayerInteractController : MonoBehaviour
 
     void TryBuildUnit(RaycastHit hit)
     {
+        var building = BuildingController.Instance.currentBuilding;
+        if (building == null)
+        {
+            return;
+        }
+
+        if (Pot.Instance.souls < 10)
+        {
+            return;
+        }
+        Pot.Instance.TakeSouls(10);
+
+        Debug.Log("Start try build object...");
+
+        if (!hit.collider.gameObject.CompareTag(_gameSettings.groundTag))
+        {
+            Debug.Log("Hitted game object not ground");
+            return;
+        }
+
+        Vector3 point = hit.point;
+        point.x = Mathf.Ceil(point.x);
+        point.y = 0;
+        point.z = Mathf.Ceil(point.z);
+
+        if (!Physics.Raycast(point + Vector3.up * 10, Vector3.down, out var newHit, 11.0f, _gameSettings.interactableLayer))
+        {
+            return;
+        }
+
+        if (!newHit.collider.gameObject.CompareTag(_gameSettings.groundTag))
+        {
+            Debug.Log("Hitted game object not ground");
+            return;
+        }
+
+        Inferno.Instance.Spawn(building, point, null);
+        BuildingController.Instance.SetUnit(null);
+
+        _player.state = Player.State.Normal;
+
+        Debug.Log("End try build object");
     }
 
     void TryUpgradeUnit(RaycastHit hit)

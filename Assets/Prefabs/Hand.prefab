@@ -57,6 +57,7 @@ MonoBehaviour:
   _afterGrabDelay: 0.1
   _spawnPoint: {fileID: 3477475847201227048}
   _handTransform: {fileID: 4687427121278847334}
+  _shadowTransform: {fileID: 762915029386532419}
 --- !u!1 &762915029386532418
 GameObject:
   m_ObjectHideFlags: 0
