@@ -8,7 +8,7 @@ public class Suck : Spawnable
     [SerializeField] private Color _originColor;
     [SerializeField] private Color _dyingColor;
 
-    public float timeToLive = 9999999999.0f;
+    public float timeToLive = 10.0f;
 
     public float cooldown = 1.0f;
 
@@ -37,27 +37,29 @@ public class Suck : Spawnable
         _waterArea = WaterArea.Instance;
         _pot = _pot ?? Pot.Instance;
 
+        _remainingTime = timeToLive;
+
         _materialPropertyBlock = new MaterialPropertyBlock();
         _meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         _isActive = _pot.power >= requiredPower;
 
-        _curPowerConsumptionTime += Time.deltaTime;
-        if (_curPowerConsumptionTime >= powerConsumptionTime && _isActive)
-        {
-            _pot.TakePower(requiredPower);
-            _curPowerConsumptionTime = 0.0f;
-        }
-    }
-
-    void FixedUpdate()
-    {
         if (!_isActive)
         {
             return;
+        }
+
+        _curPowerConsumptionTime += Time.deltaTime;
+        if (_curPowerConsumptionTime >= powerConsumptionTime)
+        {
+            if (_isActive)
+            {
+                _pot.TakePower(requiredPower);
+            }
+            _curPowerConsumptionTime = 0.0f;
         }
 
         _currentCooldown -= Time.fixedDeltaTime;
@@ -106,6 +108,7 @@ public class Suck : Spawnable
     protected override void OnSpawnEnd(GameObject by)
     {
         _isActive = true;
+        Debug.LogError(_remainingTime);
         _remainingTime = timeToLive;
     }
 
