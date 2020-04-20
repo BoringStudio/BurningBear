@@ -46,6 +46,7 @@ public class PlayerMovementController : MonoBehaviour
 
         _animator.SetFloat("Speed", _velocity.magnitude);
         _animator.SetFloat("Vertical", _inputController.verticalAxis);
+        _animator.SetFloat("HandsLevel", _player.attachPoint.hasAttachedObject ? 1.0f : 0.0f);
     }
 
     private void FixedUpdate()
