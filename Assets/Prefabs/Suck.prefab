@@ -90,6 +90,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db4630f3fd31f8a4c91d84ca5d8730c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _handAttachmentPoint: {fileID: 1978634}
   _idleTexture: {fileID: 2800000, guid: 8ae6e696aeefdf34490bb600897661a0, type: 3}
   _suckTextures:
   - {fileID: 2800000, guid: d2880ef455f74194d96dd9b1b389ba14, type: 3}
@@ -98,7 +99,9 @@ MonoBehaviour:
   - {fileID: 2800000, guid: bdba9efa3d765ad43a0b799ead37b8b5, type: 3}
   - {fileID: 2800000, guid: 66e384747fb734347a3876bc740feef6, type: 3}
   - {fileID: 2800000, guid: 45f59c681bf787d42a53276cf9d9d52e, type: 3}
-  _handAttachmentPoint: {fileID: 1978634}
+  _originColor: {r: 1, g: 1, b: 1, a: 0}
+  _dyingColor: {r: 0.3537736, g: 0.948982, b: 1, a: 0}
+  timeToLive: 10
   cooldown: 1
 --- !u!1 &4239034000625013544
 GameObject:

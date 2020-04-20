@@ -109,7 +109,7 @@ public class WaterArea : Singleton<WaterArea>
                     {
                         current &= ~(SPREAD_MASK | SOURCE_MASK);
                     }                    
-                    _waterMap[index] = ((3 << 12) & DRAIN_MASK) | (current & ~DRAIN_MASK);
+                    _waterMap[index] = ((1 << 12) & DRAIN_MASK) | (current & ~DRAIN_MASK);
                 }
             }
         }
@@ -232,7 +232,7 @@ public class WaterArea : Singleton<WaterArea>
                             if (!valueIsWall)
                             {
                                 uint delta = (uint)Mathf.Min((int)valueLevel, 1);
-                                value -= delta;
+                                //value -= delta;
 
                                 values[directions[i]] = value;
                             }

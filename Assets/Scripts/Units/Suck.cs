@@ -5,8 +5,12 @@ public class Suck : Spawnable
     [SerializeField] private Texture2D _idleTexture;
     [SerializeField] private Texture2D[] _suckTextures;
 
+    [SerializeField] private Color _originColor;
+    [SerializeField] private Color _dyingColor;
 
-    public float cooldown = 10;
+    public float timeToLive = 10.0f;
+
+    public float cooldown = 1.0f;
 
     private float _currentCooldown = 0;
     private WaterArea _waterArea;
@@ -18,6 +22,9 @@ public class Suck : Spawnable
     private MeshRenderer _meshRenderer;
 
     private bool _isSucking = false;
+    private bool _isActive = false;
+
+    private float _remainingTime;
 
     private void Awake()
     {
@@ -29,6 +36,11 @@ public class Suck : Spawnable
 
     void FixedUpdate()
     {
+        if (!_isActive)
+        {
+            return;
+        }
+
         _currentCooldown -= Time.fixedDeltaTime;
 
         if (_currentCooldown <= 0)
@@ -58,9 +70,28 @@ public class Suck : Spawnable
                 {
                     _materialPropertyBlock.SetTexture("_BaseMap", _suckTextures[_currentFrame++]);
                 }
-
-                _meshRenderer.SetPropertyBlock(_materialPropertyBlock);
             }
         }
+
+        _materialPropertyBlock.SetColor("_Color", Color.Lerp(_dyingColor, _originColor, _remainingTime / timeToLive));
+        _meshRenderer.SetPropertyBlock(_materialPropertyBlock);
+
+        _remainingTime -= Time.deltaTime;
+        if (_remainingTime <= 0.0f)
+        {
+            _isActive = false;
+            Inferno.Instance.Despawn(this);
+        }
+    }
+
+    protected override void OnSpawnEnd(GameObject by)
+    {
+        _isActive = true;
+        _remainingTime = timeToLive;
+    }
+
+    protected override void OnDespawnEnd(GameObject by)
+    {
+        Destroy(gameObject);
     }
 }

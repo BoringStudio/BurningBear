@@ -58,7 +58,14 @@ public class InfernoHand : MonoBehaviour
                 {
                     if (_attachedEntity)
                     {
-                        _attachedEntity.DoSpawnEnd(gameObject);
+                        if (_action == Action.Spawn)
+                        {
+                            _attachedEntity.DoSpawnEnd(gameObject);
+                        }
+                        else if (_action == Action.Despawn)
+                        {
+                            _attachedEntity.DoDespawnEnd(gameObject);
+                        }
                     }
                     ResetAndDestroy();
                 }
