@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
 
 public class SphereIndicator : MonoBehaviour
@@ -7,14 +6,9 @@ public class SphereIndicator : MonoBehaviour
     public Sprite[] levelSprites;
     public Image image;
 
-    void Update()
+    public void SetFilled(float current, float outOf)
     {
-
-    }
-
-    public void SetFilled(int current, int outOf)
-    {
-        var level = (int)(levelSprites.Length * (float)current / (float)outOf);
+        var level = (int)(levelSprites.Length * current / outOf);
 
         if (level == 0)
         {

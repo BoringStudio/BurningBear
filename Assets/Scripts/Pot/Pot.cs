@@ -6,7 +6,11 @@ using UnityEngine.Assertions;
 public class Pot : Singleton<Pot>
 {
     public int souls { get; private set; } = 0;
+
     public float power { get; private set; } = 0;
+
+    public int maxSouls = 10;
+    public int maxPower = 1000;
 
     [SerializeField] private float _maxSmokingDuration = 10.0f;
     [SerializeField] private float _maxSmokingRate = 10.0f;
@@ -16,8 +20,16 @@ public class Pot : Singleton<Pot>
     private float _curSmokingDuration = 0.0f;
     private bool _isSmoking = false;
 
+    [SerializeField] private SphereIndicator soulIndicator;
+    [SerializeField] private SphereIndicator powerIndicator;
+
     void Awake()
     {
+        souls = 0;
+        power = maxPower;
+        soulIndicator.SetFilled(souls, maxSouls);
+        powerIndicator.SetFilled(power, maxPower);
+
         _bigSmokeParticle = _bigSmokeParticle ?? GetComponentInChildren<BigSmokePartical>().
                                                  GetComponent<ParticleSystem>();
 
@@ -61,6 +73,7 @@ public class Pot : Singleton<Pot>
     {
         power += coal.powerCapacity;
         coal.AsSpawnable().DoDespawnImmediately(gameObject);
+        powerIndicator.SetFilled(power, maxPower);
     }
 
     void TossSinner(Sinner sinner)
@@ -69,11 +82,13 @@ public class Pot : Singleton<Pot>
         
         souls += 1;
         sinner.AsSpawnable().DoDespawnImmediately(gameObject);
+        soulIndicator.SetFilled(souls, maxSouls);
     }
 
     public void TakeSouls(int spent)
     {
         souls -= spent;
+        soulIndicator.SetFilled(souls, maxSouls);
     }
 
     void EnableBigSmoking()
