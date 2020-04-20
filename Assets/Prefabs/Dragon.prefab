@@ -353,7 +353,7 @@ MonoBehaviour:
     type: 3}
   _fireSpawningPoint: {fileID: 5550249978880440805}
   timeToLive: 10
-  cooldown: 1
+  cooldown: 2.5
 --- !u!1 &9155730879724468876
 GameObject:
   m_ObjectHideFlags: 0

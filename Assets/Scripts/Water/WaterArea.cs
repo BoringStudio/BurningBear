@@ -37,7 +37,7 @@ public class WaterArea : Singleton<WaterArea>
 
     private readonly int[] SECTOR_KERNEL = new int[]
     {
-        1, 3, 3, 5, 5, 5
+        1, 3, 3, 5, 5, 5, 5, 7, 7, 7, 7, 7, 9, 7, 5, 3
     };
 
     void Start()
@@ -99,7 +99,7 @@ public class WaterArea : Singleton<WaterArea>
         _waterMap[width * y + x] = SOURCE_MASK | LEVEL_MASK;
     }
 
-    public void EvaporateSector(Vector3 worldPoint, int direction)
+    public void EvaporateSector(Vector3 worldPoint, int direction, uint max, uint value)
     {
         var offset = worldPoint + new Vector3(width / 2, 0, height / 2);
         var x = (int)offset.x;
@@ -108,7 +108,7 @@ public class WaterArea : Singleton<WaterArea>
         switch (direction)
         {
             case 0:
-                for (int i = 0; i < SECTOR_KERNEL.Length; ++i)
+                for (int i = 0; i < SECTOR_KERNEL.Length && i < max; ++i)
                 {
                     for (int j = 0; j < SECTOR_KERNEL[i]; ++j)
                     {
@@ -121,7 +121,11 @@ public class WaterArea : Singleton<WaterArea>
                             {
                                 current &= ~(SPREAD_MASK | SOURCE_MASK);
                             }
-                            _waterMap[index] = ((3 << 12) & DRAIN_MASK) | (current & ~DRAIN_MASK);
+
+                            var currentLevel = current & LEVEL_MASK;
+                            currentLevel -= (uint)Mathf.Min((int)currentLevel, value);
+
+                            _waterMap[index] = (current & ~LEVEL_MASK) | (currentLevel & LEVEL_MASK);
                         }
                     }
                 }

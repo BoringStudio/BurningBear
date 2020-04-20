@@ -13,6 +13,7 @@ public class Dragon : Spawnable
     public float cooldown = 1.0f;
 
     private float _currentCooldown = 0;
+    private float _drainingRemaining = 0.0f;
     private WaterArea _waterArea;
 
     private MaterialPropertyBlock _materialPropertyBlock;
@@ -55,13 +56,19 @@ public class Dragon : Spawnable
                 _isShooting = true;
             }
         }
+
+        if (_drainingRemaining >= 0.0f) {
+            _waterArea.EvaporateSector(transform.position, 0, 5, 100);
+            _drainingRemaining -= Time.fixedDeltaTime;
+        }
+        else
+        {
+            _waterArea.EvaporateSector(transform.position, 0, 5, 10);
+        }
     }
 
     public void Fire()
     {
-        _waterArea.EvaporateSector(transform.position, 0);
-
-        var step = Mathf.PI / 5;
         for (int i = -3; i < 2; ++i)
         {
             var direction = (Vector3.left * 5 + Vector3.forward * i - Vector3.forward * 2).normalized;
@@ -70,5 +77,6 @@ public class Dragon : Spawnable
         }
 
         _isShooting = false;
+        _drainingRemaining = cooldown * 0.99f;
     }
 }
