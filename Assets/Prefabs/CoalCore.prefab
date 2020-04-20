@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 7380441132319451059}
   m_Layer: 11
   m_Name: CoalCore
-  m_TagString: CoalSource
+  m_TagString: CoalCore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -29,8 +29,6 @@ public class CoalCoreSpawnerManager : Singleton<CoalCoreSpawnerManager>
             _waitSpawnUntil = Random.Range(_minTimeToSpawn, _maxTimeToSpawn);
         }
 
-        Debug.Log("Current active coal core instances: " + _currentActiveCoalCoreInstances);
-
         if (_currentActiveCoalCoreInstances <
             Mathf.Min(_maxActiveCoalCoreInstances, _spawners.Length))
         {
@@ -66,7 +64,7 @@ public class CoalCoreSpawnerManager : Singleton<CoalCoreSpawnerManager>
     {
         CoalCoreSpawner spawner = GetFirstActive();
         if (spawner == null) {
-            Debug.LogError("No unoccupied coal core spawners");
+            Debug.LogError("No not active coal core spawners");
             return;
         }
 

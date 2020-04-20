@@ -10,7 +10,7 @@ TagManager:
   - Wall
   - Water
   - Attachable
-  - CoalSource
+  - CoalCore
   layers:
   - Default
   - TransparentFX

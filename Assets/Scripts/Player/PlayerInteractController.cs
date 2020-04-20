@@ -7,30 +7,24 @@ public class PlayerInteractController : MonoBehaviour
 {
     public AttachPoint attachPoint = null;
 
-
     public Transform mouseOriginInteractionPoint = null;
     public float mouseInteractionRadius = 5f;
-    public LayerMask interactibleLayer;
 
     private Player _player = null;
+    private GameSettings _gameSettings = null;
     private InputController _inputController = null;
     private Camera _camera = null;
     private Inferno _inferno = null;
-
-
-    private const string flameTag = "Flame";
-    private const string groundTag = "Ground";
-    private const string attachableTag = "Attachable";
-    private const string coalSourceTag = "CoalSource";
 
     void Awake()
     {
         _inferno = _inferno ?? Inferno.Instance;
         _player = _player ?? Player.Instance;
-        _inputController = _inputController ?? gameObject.GetComponentInChildren<InputController>();
+        _inputController = _inputController ?? InputController.Instance;
         _camera = _camera ?? gameObject.GetComponentInChildren<Camera>();
         attachPoint = attachPoint ?? gameObject.GetComponentInChildren<AttachPoint>();
         mouseOriginInteractionPoint = mouseOriginInteractionPoint ?? transform;
+        _gameSettings = _gameSettings ?? GameSettings.Instance;
 
         Assert.IsNotNull(_player, "[PlayerInteractController]: Player is null");
         Assert.IsNotNull(_inputController, "[PlayerInteractController]: Input controller is null");
@@ -58,7 +52,7 @@ public class PlayerInteractController : MonoBehaviour
             RaycastHit hit;
             Ray ray = _camera.ScreenPointToRay(_inputController.mousePosition);
 
-            if (Physics.Raycast(ray, out hit, 100.0f, interactibleLayer))
+            if (Physics.Raycast(ray, out hit, 100.0f, _gameSettings.interactableLayer))
             {
                 var hittedGameObject = hit.collider.gameObject;
                 var hittedTag = hittedGameObject.tag;
@@ -66,9 +60,10 @@ public class PlayerInteractController : MonoBehaviour
                 var distance = (hitPosition - mouseOriginInteractionPoint.position).magnitude;
 
                 Debug.Log("Distance to interacted object: " + distance);
+                Debug.Log("Hitted game object: " + hittedGameObject);
                 Debug.Log("Hitted object tag: " + hittedTag);
                 Debug.Log("Hitted point position: " + hitPosition);
-                if (distance <= mouseInteractionRadius && hittedTag != "Player")
+                if (distance <= mouseInteractionRadius)
                 {
                     switch (_player.state)
                     {
@@ -81,6 +76,7 @@ public class PlayerInteractController : MonoBehaviour
                             break;
                         case Player.State.Attach:
                             TryDeattachObject(hit);
+                            TryTossToPot(hit);
                             break;
                         case Player.State.Build:
                             TryBuildUnit(hit);
@@ -98,7 +94,7 @@ public class PlayerInteractController : MonoBehaviour
     {
         Debug.Log("Start try mine coal core...");
 
-        if (hit.collider.gameObject.tag != coalSourceTag)
+        if (hit.collider.gameObject.tag != _gameSettings.coalCoreTag)
         {
             Debug.Log("Hitted game object not coal source");
             return;
@@ -111,7 +107,8 @@ public class PlayerInteractController : MonoBehaviour
             return;
         }
 
-        if (coalCore.Mine()) {
+        if (coalCore.Mine())
+        {
             _player.state = Player.State.WaitingToAttach;
         }
 
@@ -122,7 +119,7 @@ public class PlayerInteractController : MonoBehaviour
     {
         Debug.Log("Start try attach object...");
 
-        if (hit.collider.gameObject.tag != attachableTag)
+        if (hit.collider.gameObject.tag != _gameSettings.attachableTag)
         {
             Debug.Log("Hitted game object not attachable");
             return;
@@ -145,21 +142,45 @@ public class PlayerInteractController : MonoBehaviour
     {
         Debug.Log("Start try deattach object...");
 
-        switch (hit.collider.gameObject.tag)
+        if (hit.collider.gameObject.tag != _gameSettings.groundTag)
         {
-            case groundTag:
-            case flameTag:
-                var newSinnerPosition = hit.point;
-
-                attachPoint.DeattachObject(newSinnerPosition);
-                _player.state = Player.State.Normal;
-                break;
-            default:
-                Debug.Log("Hitted game object not ground or flame");
-                return;
+            Debug.Log("Hitted game object not ground");
+            return;
         }
 
+        var newObjectPosition = new Vector3(hit.point.x, 0, hit.point.z);
+
+        attachPoint.DeattachObject(newObjectPosition);
+        _player.state = Player.State.Normal;
+
         Debug.Log("End try deattach object");
+    }
+
+    void TryTossToPot(RaycastHit hit)
+    {
+        Debug.Log("Start try toss to pot...");
+
+        if (hit.collider.gameObject.tag != _gameSettings.flameTag)
+        {
+            Debug.Log("Hitted game object not flame");
+            return;
+        }
+
+        Pot pot = hit.collider.gameObject.GetComponent<Pot>();
+        if (pot == null)
+        {
+            Debug.Log("Hitted game object doesnt have pot component");
+            return;
+        }
+
+        var newObjectPosition = new Vector3(hit.point.x, 0, hit.point.z);
+        GameObject objectToDeattach = attachPoint.attachedObject.gameObject;
+
+        attachPoint.DeattachObject(newObjectPosition);
+        pot.TossObject(objectToDeattach);
+        _player.state = Player.State.Normal;
+
+        Debug.Log("End try toss to pot");
     }
 
     void TryBuildUnit(RaycastHit hit)
