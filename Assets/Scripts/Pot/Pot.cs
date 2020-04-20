@@ -66,7 +66,7 @@ public class Pot : Singleton<Pot>
     void TossSinner(Sinner sinner)
     {
         EnableBigSmoking();
-        
+
         souls += 1;
         sinner.AsSpawnable().DoDespawnImmediately(gameObject);
     }
@@ -74,6 +74,11 @@ public class Pot : Singleton<Pot>
     public void TakeSouls(int spent)
     {
         souls -= spent;
+    }
+
+    public void TakePower(float spent)
+    {
+        power -= spent;
     }
 
     void EnableBigSmoking()

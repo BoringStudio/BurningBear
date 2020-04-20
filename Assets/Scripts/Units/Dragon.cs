@@ -9,7 +9,7 @@ public class Dragon : Spawnable
     [SerializeField] private DragonFire _firePrefab;
     [SerializeField] private Transform _fireSpawningPoint;
 
-    public float timeToLive = 10.0f;
+    public float timeToLive = 9999999999.0f;
     public float cooldown = 1.0f;
 
     private float _currentCooldown = 0;
