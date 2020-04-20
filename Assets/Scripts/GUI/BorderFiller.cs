@@ -35,7 +35,7 @@ public class BorderFiller : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        var count = _resolution.x / (int)tile.rectTransform.sizeDelta.x + 2;
+        var count = _resolution.x / (int)(tile.rectTransform.sizeDelta.x * 0.3);
 
         var offset = Vector3.left * _resolution.x / 2.0f;
         for (var i = 0; i < count; ++i)
