@@ -9,7 +9,12 @@ namespace Assets.Scripts.Menu
 
         public void LoadIntro()
         {
-            SceneManager.LoadScene(nextSceneName, LoadSceneMode.Additive);
+            SceneManager.LoadScene(nextSceneName, LoadSceneMode.Single);
+        }
+
+        public void LoadMain()
+        {
+            SceneManager.LoadScene("Main", LoadSceneMode.Single);
         }
 
         public void ExitGame()

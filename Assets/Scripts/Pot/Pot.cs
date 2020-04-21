@@ -58,7 +58,7 @@ public class Pot : Singleton<Pot>
 
         if (total > 200)
         {
-            TakePower(1);
+            TakePower(10);
         }
     }
 
