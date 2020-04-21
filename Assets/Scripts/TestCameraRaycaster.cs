@@ -16,15 +16,5 @@ public class TestCameraRaycaster : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(2))
-        {
-            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-
-            if (Physics.Raycast(ray, out RaycastHit hit, _groundMask))
-            {
-                Vector3 point = hit.point;
-                _waterArea.Liquify(point);
-            }
-        }
     }
 }

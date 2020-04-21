@@ -224,8 +224,8 @@ MonoBehaviour:
     type: 3}
   maxProductionProgress: 100
   currentProductionProgress: 0
-  productionRate: 50
-  coalCapacity: 2
+  productionRate: 100
+  coalCapacity: 1
 --- !u!114 &7380441132319451059
 MonoBehaviour:
   m_ObjectHideFlags: 0

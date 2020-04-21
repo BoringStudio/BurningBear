@@ -15,7 +15,7 @@ public class Dragon : Spawnable
     private float _curPowerConsumptionTime = 0.0f;
     private Pot _pot = null;
 
-    public float timeToLive = 9999999999.0f;
+    public float timeToLive = 10.0f;
     public float cooldown = 1.0f;
 
     private float _currentCooldown = 0;
@@ -31,10 +31,14 @@ public class Dragon : Spawnable
     public float rotateAfter = 2.0f;
     public float _currentRotationTimer = 0.0f;
 
+    private float _remainingTime;
+
     void Awake()
     {
         _waterArea = WaterArea.Instance;
         _pot = _pot ?? Pot.Instance;
+
+        _remainingTime = timeToLive;
 
         _animator = GetComponentInChildren<Animator>();
 
@@ -93,6 +97,13 @@ public class Dragon : Spawnable
         {
             _waterArea.EvaporateSector(transform.position, 0, 5, 10);
         }
+
+        _remainingTime -= Time.deltaTime;
+        if (_remainingTime <= 0.0f)
+        {
+            _isActive = false;
+            Inferno.Instance.Despawn(this);
+        }
     }
 
     public void Fire()
@@ -111,5 +122,17 @@ public class Dragon : Spawnable
 
         _isShooting = false;
         _drainingRemaining = cooldown * 0.99f;
+    }
+
+    protected override void OnSpawnEnd(GameObject by)
+    {
+        _isActive = true;
+        Debug.LogError(_remainingTime);
+        _remainingTime = timeToLive;
+    }
+
+    protected override void OnDespawnEnd(GameObject by)
+    {
+        Destroy(gameObject);
     }
 }

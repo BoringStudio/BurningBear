@@ -25,7 +25,7 @@ public class Pot : Singleton<Pot>
 
     void Awake()
     {
-        souls = 0;
+        souls = maxPower;
         power = maxPower;
         soulIndicator.SetFilled(souls, maxSouls);
         powerIndicator.SetFilled(power, maxPower);
@@ -105,6 +105,10 @@ public class Pot : Singleton<Pot>
     {
         power -= spent;
         powerIndicator.SetFilled(power, maxPower);
+        if (power <= 0)
+        {
+            GameController.Instance.DoGameOver();
+        }
     }
 
     void EnableBigSmoking()

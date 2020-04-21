@@ -2,26 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
-public class GameController : MonoBehaviour
+public class GameController : Singleton<GameController>
 {
+    public TextMeshProUGUI counter;
+
     public float maxGameTime = 600.0f;
     private float _curTimer = 0.0f;
 
-    // Start is called before the first frame update
     void Start()
     {
 
     }
 
-    // Update is called once per frame
     void Update()
     {
         _curTimer += Time.deltaTime;
-        if (_curTimer >= maxGameTime)
-        {
-            DoGameOver();
-        }
+        counter.text = ((int)_curTimer).ToString();
     }
 
     public void DoGameOver()
@@ -31,6 +29,6 @@ public class GameController : MonoBehaviour
 
     public void DoGameWin()
     {
-        SceneManager.LoadScene("GamwWinScene", LoadSceneMode.Additive);
+        SceneManager.LoadScene("GameWinScene", LoadSceneMode.Additive);
     }
 }
