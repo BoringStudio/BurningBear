@@ -52,6 +52,16 @@ public class Pot : Singleton<Pot>
         }
     }
 
+    private void FixedUpdate()
+    {
+        var total = WaterArea.Instance.Calculate(transform.position);
+
+        if (total > 200)
+        {
+            TakePower(1);
+        }
+    }
+
     public void TossObject(GameObject go)
     {
         Coal coal = go.GetComponent<Coal>();
@@ -94,6 +104,7 @@ public class Pot : Singleton<Pot>
     public void TakePower(float spent)
     {
         power -= spent;
+        powerIndicator.SetFilled(power, maxPower);
     }
 
     void EnableBigSmoking()

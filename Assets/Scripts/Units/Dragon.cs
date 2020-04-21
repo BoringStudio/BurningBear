@@ -22,21 +22,19 @@ public class Dragon : Spawnable
     private float _drainingRemaining = 0.0f;
     private WaterArea _waterArea;
 
-    private MaterialPropertyBlock _materialPropertyBlock;
-    private MeshRenderer _meshRenderer;
-
     private Animator _animator;
+    [SerializeField] private MeshRenderer _meshRenderer;
 
     private bool _isShooting = false;
     private bool _isActive = true;
+
+    public float rotateAfter = 2.0f;
+    public float _currentRotationTimer = 0.0f;
 
     void Awake()
     {
         _waterArea = WaterArea.Instance;
         _pot = _pot ?? Pot.Instance;
-
-        _materialPropertyBlock = new MaterialPropertyBlock();
-        _meshRenderer = GetComponentInChildren<MeshRenderer>();
 
         _animator = GetComponentInChildren<Animator>();
 
@@ -76,8 +74,19 @@ public class Dragon : Spawnable
             }
         }
 
+        var scale = _meshRenderer.transform.localScale;
+        Debug.Log(scale);
+
+        _currentRotationTimer += Time.fixedDeltaTime;
+        if (_currentRotationTimer > rotateAfter)
+        {
+            scale.x *= -1.0f;
+            _meshRenderer.transform.localScale = scale;
+            _currentRotationTimer = 0.0f;
+        }
+
         if (_drainingRemaining >= 0.0f) {
-            _waterArea.EvaporateSector(transform.position, 0, 5, 100);
+            _waterArea.EvaporateSector(transform.position, scale.x > 0 ? 0 : 1, 5, 100);
             _drainingRemaining -= Time.fixedDeltaTime;
         }
         else
@@ -90,8 +99,13 @@ public class Dragon : Spawnable
     {
         for (int i = -3; i < 2; ++i)
         {
-            var direction = (Vector3.left * 5 + Vector3.forward * i - Vector3.forward * 2).normalized;
+            var sign = Mathf.Sign(_meshRenderer.transform.localScale.x);
+
+            var direction = (Vector3.left * 5 + Vector3.forward * i - Vector3.forward * sign * 2).normalized * sign;
             var fire = Instantiate(_firePrefab, _fireSpawningPoint.transform.position + Random.Range(0.0f, 1.0f) * Vector3.right, Quaternion.identity);
+            var firescale = fire.transform.localScale;
+            firescale.x *= sign;
+            fire.transform.localScale = firescale;
             fire.direction = direction;
         }
 

@@ -90,13 +90,37 @@ public class WaterArea : Singleton<WaterArea>
         }
     }
 
+    public uint Calculate(Vector3 worldPoint)
+    {
+        var offset = worldPoint + new Vector3(width / 2 + 1, 0, height / 2 + 1);
+        var x = (int)offset.x;
+        var y = height - (int)offset.z;
+
+        uint total = 0;
+        for (int i = 0; i < 4; ++i)
+        {
+            for (int j = 0; j < 4; ++j)
+            {
+                total += _waterMap[width * y + x] & LEVEL_MASK;
+            }
+        }
+
+        return total;
+    }
+
     public void Liquify(Vector3 worldPoint)
     {
         var offset = worldPoint + new Vector3(width / 2 + 1, 0, height / 2 + 1);
         var x = (int)offset.x;
         var y = height - (int)offset.z;
 
-        _waterMap[width * y + x] = SOURCE_MASK | LEVEL_MASK;
+        var current = _waterMap[width * y + x];
+        if ((current & DRAIN_MASK) != 0)
+        {
+            current &= ~SPREAD_MASK;
+        }
+
+        _waterMap[width * y + x] = ((current << 16) & SPREAD_MASK) | SOURCE_MASK | LEVEL_MASK;
     }
 
     public void EvaporateSector(Vector3 worldPoint, int direction, uint max, uint value)
@@ -113,6 +137,29 @@ public class WaterArea : Singleton<WaterArea>
                     for (int j = 0; j < SECTOR_KERNEL[i]; ++j)
                     {
                         var index = width * (y - SECTOR_KERNEL[i] / 2 + j) + x - i;
+                        var current = _waterMap[index];
+
+                        if ((current & WALL_MASK) == 0)
+                        {
+                            if ((current & SOURCE_MASK) != 0)
+                            {
+                                current &= ~(SPREAD_MASK | SOURCE_MASK);
+                            }
+
+                            var currentLevel = current & LEVEL_MASK;
+                            currentLevel -= (uint)Mathf.Min((int)currentLevel, value);
+
+                            _waterMap[index] = (current & ~LEVEL_MASK) | (currentLevel & LEVEL_MASK);
+                        }
+                    }
+                }
+                break;
+            case 1:
+                for (int i = 0; i < SECTOR_KERNEL.Length && i < max; ++i)
+                {
+                    for (int j = 0; j < SECTOR_KERNEL[i]; ++j)
+                    {
+                        var index = width * (y - SECTOR_KERNEL[i] / 2 + j) + x + i;
                         var current = _waterMap[index];
 
                         if ((current & WALL_MASK) == 0)

@@ -343,8 +343,6 @@ MonoBehaviour:
   - {fileID: -1050607944977986443, guid: 4cf3aeeacbb2d6340b53457862b0b648, type: 3}
   - {fileID: 728096767378572191, guid: 13d7c30d23252e24fb5914c20296861e, type: 3}
   image: {fileID: 4911071150887482608}
-  level: 0
-  max: 0
 --- !u!1 &4911071150596636570
 GameObject:
   m_ObjectHideFlags: 0
@@ -1560,8 +1558,6 @@ MonoBehaviour:
   - {fileID: -241813123006956720, guid: 9dcd9c5a40997bd45ab44f00a0d80b99, type: 3}
   - {fileID: -7239532708693407234, guid: d8a3ba681d3b1884bb3554bdebd617c8, type: 3}
   image: {fileID: 4911071151115023214}
-  level: 3
-  max: 10
 --- !u!1 &4911071152621087050
 GameObject:
   m_ObjectHideFlags: 0

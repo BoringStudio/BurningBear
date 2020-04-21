@@ -189,9 +189,8 @@ public class PlayerInteractController : MonoBehaviour
 
         if (Pot.Instance.souls < 10)
         {
-            return;
+            //return;
         }
-        Pot.Instance.TakeSouls(10);
 
         Debug.Log("Start try build object...");
 
@@ -200,6 +199,8 @@ public class PlayerInteractController : MonoBehaviour
             Debug.Log("Hitted game object not ground");
             return;
         }
+
+        //Pot.Instance.TakeSouls(10);
 
         Vector3 point = hit.point;
         point.x = Mathf.Ceil(point.x);

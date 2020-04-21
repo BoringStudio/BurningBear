@@ -348,12 +348,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handAttachmentPoint: {fileID: 1631040805747194759}
   _originColor: {r: 1, g: 1, b: 1, a: 0}
-  _dyingColor: {r: 1, g: 0.6666667, b: 0.2216981, a: 0}
+  _dyingColor: {r: 1, g: 1, b: 1, a: 0}
   _firePrefab: {fileID: 640745886273934199, guid: 1547f1f9e3348e44f9df9c5e703ebbb9,
     type: 3}
   _fireSpawningPoint: {fileID: 5550249978880440805}
+  requiredPower: 10
+  powerConsumptionTime: 10
   timeToLive: 10
   cooldown: 2.5
+  _meshRenderer: {fileID: 9155730879178456589}
+  rotateAfter: 1
+  _currentRotationTimer: 0
 --- !u!1 &9155730879724468876
 GameObject:
   m_ObjectHideFlags: 0
