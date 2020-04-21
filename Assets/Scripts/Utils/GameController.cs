@@ -24,6 +24,7 @@ public class GameController : Singleton<GameController>
 
     public void DoGameOver()
     {
+        CursorController.Instance.SetNormalCursor();
         SceneManager.LoadScene("GameOverScene", LoadSceneMode.Single);
     }
 
