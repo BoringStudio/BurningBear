@@ -24,11 +24,11 @@ public class GameController : Singleton<GameController>
 
     public void DoGameOver()
     {
-        SceneManager.LoadScene("GameOverScene", LoadSceneMode.Additive);
+        SceneManager.LoadScene("GameOverScene", LoadSceneMode.Single);
     }
 
     public void DoGameWin()
     {
-        SceneManager.LoadScene("GameWinScene", LoadSceneMode.Additive);
+        SceneManager.LoadScene("GameWinScene", LoadSceneMode.Single);
     }
 }
