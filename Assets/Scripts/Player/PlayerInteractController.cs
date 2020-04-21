@@ -69,9 +69,9 @@ public class PlayerInteractController : MonoBehaviour
                         case Player.State.WaitingToAttach:
                             break;
                         case Player.State.Normal:
-                            TryMine(hit);
+                            //TryMine(hit);
                             TryAttachObject(hit);
-                            TryUpgradeUnit(hit);
+                            //TryUpgradeUnit(hit);
                             break;
                         case Player.State.Attach:
                             TryDeattachObject(hit);

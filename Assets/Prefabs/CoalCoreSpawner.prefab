@@ -43,5 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e28539dec84513e4c9d75e4ee1ab35c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coalCorePrefab: {fileID: 761344564428534107, guid: 4f785df2a8e410b478c887a6a4d7a3a2,
+  _spawnablePrefab: {fileID: 6783527174074658708, guid: 5c1396872cd4149468d9a20f33fd9ece,
     type: 3}

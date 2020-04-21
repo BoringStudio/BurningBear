@@ -38,7 +38,6 @@ public class CoalCoreSpawnerManager : Singleton<CoalCoreSpawnerManager>
             {
                 _currentTimeToSpawn = 0.0f;
                 _waitSpawnUntil = -1.0f;
-                _currentActiveCoalCoreInstances += 1;
 
                 SpawnCoalCore();
 
@@ -69,6 +68,7 @@ public class CoalCoreSpawnerManager : Singleton<CoalCoreSpawnerManager>
         }
 
         spawner.SpawnCoalCore();
+        UpdateNumberOfActiveCoalCore();
     }
 
     public void UpdateNumberOfActiveCoalCore() {

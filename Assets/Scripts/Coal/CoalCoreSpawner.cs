@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CoalCoreSpawner : MonoBehaviour
 {
-    [SerializeField] private CoalCore _coalCorePrefab = null;
+    [SerializeField] private Coal _spawnablePrefab = null;
     private Inferno _inferno = null;
     private CoalCoreSpawnerManager _spawnerManager = null;
 
@@ -28,7 +28,7 @@ public class CoalCoreSpawner : MonoBehaviour
     {
         if (!isActive)
         {
-            var spawnHandler = _inferno.Spawn(_coalCorePrefab.AsSpawnable(), transform.position, transform);
+            var spawnHandler = _inferno.Spawn(_spawnablePrefab.AsSpawnable(), transform.position, transform);
             spawnHandler.spawner = this;
             isActive = true;
         }
