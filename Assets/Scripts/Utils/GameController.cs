@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameOverController : MonoBehaviour
+public class GameController : MonoBehaviour
 {
     public float maxGameTime = 600.0f;
     private float _curTimer = 0.0f;
@@ -27,5 +27,10 @@ public class GameOverController : MonoBehaviour
     public void DoGameOver()
     {
         SceneManager.LoadScene("GameOverScene", LoadSceneMode.Additive);
+    }
+
+    public void DoGameWin()
+    {
+        SceneManager.LoadScene("GamwWinScene", LoadSceneMode.Additive);
     }
 }
