@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2035260830}
   - component: {fileID: 2035260829}
   - component: {fileID: 2035260828}
+  - component: {fileID: 21985322}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -49,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameOverScene: GameOverScene
   _counter: {fileID: 0}
-  _cursorController: {fileID: 0}
+  _cursorController: {fileID: 2035260830}
 --- !u!114 &2035260831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,7 +63,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dca1ba0f90791ca45929f429439959a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _activeButtonColor: {r: 0.5254902, g: 1, b: 0.5137255, a: 1}
+  _disabledButtonColor: {r: 0.9245283, g: 0.9245283, b: 0.9245283, a: 1}
+  _pot: {fileID: 0}
   _player: {fileID: 0}
+  _suckPrefab: {fileID: 5324392732808091583, guid: 1379f4c44b2e4d447a96e107bd77d95d,
+    type: 3}
+  _dragonPrefab: {fileID: 2868010294149468270, guid: a34909229fa512045bfb8776fb59aa29,
+    type: 3}
+  _suckBuildingButton: {fileID: 0}
+  _dragonBuildingButton: {fileID: 0}
 --- !u!114 &2035260830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,3 +122,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8c6ced2b3428dd438888cb4457723c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &21985322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7891948802779848188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa7c38ae997ed3149b4b355ea2633407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioClips:
+  - {fileID: 8300000, guid: 41cfe8b142b21874d8f1f00079d6f1cc, type: 3}
+  - {fileID: 8300000, guid: 20ebe011e69904a42846c88ae0b16e3d, type: 3}

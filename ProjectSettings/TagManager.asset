@@ -11,6 +11,7 @@ TagManager:
   - Water
   - Attachable
   - CoalCore
+  - Persistent
   layers:
   - Default
   - TransparentFX
