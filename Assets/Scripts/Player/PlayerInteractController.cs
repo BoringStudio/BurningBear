@@ -150,8 +150,8 @@ public class PlayerInteractController : MonoBehaviour
 
         var newObjectPosition = new Vector3(hit.point.x, 0, hit.point.z);
 
-        attachPoint.DeattachObject(newObjectPosition);
         _player.state = Player.State.Normal;
+        attachPoint.DeattachObject(newObjectPosition);
 
         Debug.Log("End try deattach object");
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 
@@ -15,8 +16,10 @@ public class BuildingController : MonoBehaviour
     [SerializeField] private Suck _suckPrefab;
     [SerializeField] private Dragon _dragonPrefab;
 
+    [SerializeField] private TextMeshProUGUI _hint;
     [SerializeField] private Button _suckBuildingButton;
     [SerializeField] private Button _dragonBuildingButton;
+
 
     private Image _suckBuildingButtonImage;
     private Image _dragonBuildingButtonImage;
@@ -40,6 +43,7 @@ public class BuildingController : MonoBehaviour
 
     private void Update()
     {
+        _hint.enabled = _player.state == Player.State.Build && currentBuilding != null;
         SetButtonEnabled(_suckBuildingButton, _suckBuildingButtonImage, _pot.souls >= _suckPrefab.cost);
         SetButtonEnabled(_dragonBuildingButton, _dragonBuildingButtonImage, _pot.souls >= _dragonPrefab.cost);
     }
@@ -52,6 +56,11 @@ public class BuildingController : MonoBehaviour
 
     public void SetUnit(Unit unit)
     {
+        if (_player.state != Player.State.Normal)
+        {
+            return;
+        }
+
         currentBuilding = unit;
 
         if (unit)

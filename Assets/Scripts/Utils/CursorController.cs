@@ -41,15 +41,15 @@ public class CursorController : MonoBehaviour
             var hittedGameObject = hit.collider.gameObject;
             var hittedTag = hittedGameObject.tag;
 
-            if (hittedTag == _gameSettings.coalCoreTag)
+            if (hittedTag == _gameSettings.coalCoreTag && _player.state == Player.State.Normal)
             {
                 SetMiningCursor();
             }
-            else if (hittedTag == _gameSettings.attachableTag)
+            else if (hittedTag == _gameSettings.attachableTag && _player.state == Player.State.Normal)
             {
                 SetGrabCursor();
             }
-            else if (hittedTag == _gameSettings.groundTag && _buildingController.currentBuilding)
+            else if (hittedTag == _gameSettings.groundTag && _player.state == Player.State.Build && _buildingController.currentBuilding)
             {
                 SetBuildingCursor();
             }
