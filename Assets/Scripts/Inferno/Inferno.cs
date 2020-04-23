@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class Inferno : Singleton<Inferno>
+public class Inferno : MonoBehaviour
 {
-    [SerializeField] InfernoHand _handPrefab;
+    [SerializeField] private InfernoHand _handPrefab;
 
     public T Spawn<T>(T prefab, Vector3 position, Transform followTarget) where T : Spawnable
     {

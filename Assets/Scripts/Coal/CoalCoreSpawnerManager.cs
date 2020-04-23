@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CoalCoreSpawnerManager : Singleton<CoalCoreSpawnerManager>
+public class CoalCoreSpawnerManager : MonoBehaviour
 {
     [SerializeField] private float _minTimeToSpawn = 20.0f;
     [SerializeField] private float _maxTimeToSpawn = 100.0f;
     [SerializeField] private int _maxActiveCoalCoreInstances = 10;
+
     private CoalCoreSpawner[] _spawners;
 
     private int _currentActiveCoalCoreInstances = 0;
@@ -62,7 +61,8 @@ public class CoalCoreSpawnerManager : Singleton<CoalCoreSpawnerManager>
     private void SpawnCoalCore()
     {
         CoalCoreSpawner spawner = GetFirstActive();
-        if (spawner == null) {
+        if (spawner == null)
+        {
             Debug.LogError("No not active coal core spawners");
             return;
         }
@@ -71,7 +71,8 @@ public class CoalCoreSpawnerManager : Singleton<CoalCoreSpawnerManager>
         UpdateNumberOfActiveCoalCore();
     }
 
-    public void UpdateNumberOfActiveCoalCore() {
+    public void UpdateNumberOfActiveCoalCore()
+    {
         _currentActiveCoalCoreInstances = 0;
         foreach (CoalCoreSpawner spawner in _spawners)
         {

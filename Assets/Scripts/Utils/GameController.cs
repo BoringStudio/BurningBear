@@ -1,35 +1,43 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.SceneManagement;
-using TMPro;
 
-public class GameController : Singleton<GameController>
+public class GameController : MonoBehaviour
 {
-    public TextMeshProUGUI counter;
+    [SerializeField] private string _gameOverScene = "GameOverScene";
 
-    public float maxGameTime = 600.0f;
+    [SerializeField] private TextMeshProUGUI _counter;
+    [SerializeField] private CursorController _cursorController;
+
     private float _curTimer = 0.0f;
+    private int _currentSeconds = -1;
 
-    void Start()
+    void Awake()
     {
-
+        Assert.IsNotNull(_cursorController, "[GameController]: Counter text is null");
+        Assert.IsNotNull(_cursorController, "[GameController]: Cursor controller is null");
     }
 
     void Update()
     {
         _curTimer += Time.deltaTime;
-        counter.text = ((int)_curTimer).ToString();
+
+        var seconds = (int)_curTimer;
+        if (_currentSeconds != seconds)
+        {
+            _counter.text = $"{seconds / 60}:{seconds % 60}";
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+        }
     }
 
     public void DoGameOver()
     {
-        CursorController.Instance.SetNormalCursor();
+        _cursorController.SetNormalCursor();
         SceneManager.LoadScene("GameOverScene", LoadSceneMode.Single);
-    }
-
-    public void DoGameWin()
-    {
-        SceneManager.LoadScene("GameWinScene", LoadSceneMode.Single);
     }
 }

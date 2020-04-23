@@ -1,36 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 
 public class PlayerInteractController : MonoBehaviour
 {
-    public AttachPoint attachPoint = null;
+    public AttachPoint attachPoint;
 
-    public Transform mouseOriginInteractionPoint = null;
-    public float mouseInteractionRadius = 5f;
+    [SerializeField] private Transform _mouseOriginInteractionPoint = null;
+    [SerializeField] private float _mouseInteractionRadius = 5f;
 
-    private Player _player = null;
-    private GameSettings _gameSettings = null;
-    private InputController _inputController = null;
+    [SerializeField] private Player _player = null;
+    [SerializeField] private Inferno _inferno = null;
+    [SerializeField] private Pot _pot = null;
+
+    [SerializeField] private GameSettings _gameSettings = null;
+    [SerializeField] private InputController _inputController = null;
+    [SerializeField] private BuildingController _buildingController = null;
+
     private Camera _camera = null;
-    private Inferno _inferno = null;
 
     void Awake()
     {
-        _inferno = _inferno ?? Inferno.Instance;
-        _player = _player ?? Player.Instance;
-        _inputController = _inputController ?? InputController.Instance;
+        attachPoint = gameObject.GetComponentInChildren<AttachPoint>();
+
         _camera = _camera ?? gameObject.GetComponentInChildren<Camera>();
-        attachPoint = attachPoint ?? gameObject.GetComponentInChildren<AttachPoint>();
-        mouseOriginInteractionPoint = mouseOriginInteractionPoint ?? transform;
-        _gameSettings = _gameSettings ?? GameSettings.Instance;
+
+        _mouseOriginInteractionPoint = _mouseOriginInteractionPoint ?? transform;
 
         Assert.IsNotNull(_player, "[PlayerInteractController]: Player is null");
+        Assert.IsNotNull(_inferno, "[PlayerInteractController]: Inferno is null");
+        Assert.IsNotNull(_pot, "[PlayerInteractController]: Pot is null");
+
+        Assert.IsNotNull(_gameSettings, "[PlayerInteractController]: Game settings is null");
         Assert.IsNotNull(_inputController, "[PlayerInteractController]: Input controller is null");
+        Assert.IsNotNull(_buildingController, "[PlayerInteractController]: Building controller is null");
+
         Assert.IsNotNull(_camera, "[PlayerInteractController]: Camera is null");
         Assert.IsNotNull(attachPoint, "[PlayerInteractController]: Attach point is null");
-        Assert.IsNotNull(mouseOriginInteractionPoint, "[PlayerInteractController]: Mouse origin interaction point is null");
     }
 
     void Update()
@@ -42,27 +47,26 @@ public class PlayerInteractController : MonoBehaviour
     {
         if (_inputController.releaseButtonDown && _player.state == Player.State.Build)
         {
-            BuildingController.Instance.SetUnit(null);
+            _buildingController.SetUnit(null);
             _player.state = Player.State.Normal;
         }
 
         if (_inputController.interactButtonDown)
         {
-            RaycastHit hit;
             Ray ray = _camera.ScreenPointToRay(_inputController.mousePosition);
 
-            if (Physics.Raycast(ray, out hit, 100.0f, _gameSettings.interactableLayer))
+            if (Physics.Raycast(ray, out RaycastHit hit, 100.0f, _gameSettings.interactableLayer))
             {
                 var hittedGameObject = hit.collider.gameObject;
                 var hittedTag = hittedGameObject.tag;
                 var hitPosition = hit.point;
-                var distance = (hitPosition - mouseOriginInteractionPoint.position).magnitude;
+                var distance = (hitPosition - _mouseOriginInteractionPoint.position).magnitude;
 
                 Debug.Log("Distance to interacted object: " + distance);
                 Debug.Log("Hitted game object: " + hittedGameObject);
                 Debug.Log("Hitted object tag: " + hittedTag);
                 Debug.Log("Hitted point position: " + hitPosition);
-                if (distance <= mouseInteractionRadius)
+                if (distance <= _mouseInteractionRadius)
                 {
                     switch (_player.state)
                     {
@@ -181,13 +185,13 @@ public class PlayerInteractController : MonoBehaviour
 
     void TryBuildUnit(RaycastHit hit)
     {
-        var building = BuildingController.Instance.currentBuilding;
+        var building = _buildingController.currentBuilding;
         if (building == null)
         {
             return;
         }
 
-        if (Pot.Instance.souls < 10)
+        if (_pot.souls < _buildingController.currentBuilding.cost)
         {
             return;
         }
@@ -199,8 +203,6 @@ public class PlayerInteractController : MonoBehaviour
             Debug.Log("Hitted game object not ground");
             return;
         }
-
-        Pot.Instance.TakeSouls(10);
 
         Vector3 point = hit.point;
         point.x = Mathf.Ceil(point.x);
@@ -218,8 +220,10 @@ public class PlayerInteractController : MonoBehaviour
             return;
         }
 
-        Inferno.Instance.Spawn(building, point, null);
-        BuildingController.Instance.SetUnit(null);
+        _pot.TakeSouls(_buildingController.currentBuilding.cost);
+        _inferno.Spawn(building, point, null);
+
+        _buildingController.SetUnit(null);
 
         _player.state = Player.State.Normal;
 

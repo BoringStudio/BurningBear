@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class SinnerSpawner : MonoBehaviour
 {
     [SerializeField] private Sinner _sinnerPrefab = null;
-    private Inferno _inferno = null;
-    private SinnerSpawnerManager _spawnerManager = null;
+
+    [SerializeField] private Inferno _inferno = null;
+    [SerializeField] private SinnerSpawnerManager _spawnerManager = null;
 
     public bool isActive
     {
@@ -16,12 +18,10 @@ public class SinnerSpawner : MonoBehaviour
 
     void Awake()
     {
-        _inferno = _inferno ?? Inferno.Instance;
-        _spawnerManager = _spawnerManager ?? SinnerSpawnerManager.Instance;
-    }
+        Assert.IsNotNull(_sinnerPrefab, "[SinnerSpawner]: Sinner prefab is null");
 
-    void Update()
-    {
+        Assert.IsNotNull(_inferno, "[SinnerSpawner]: Inferno is null");
+        Assert.IsNotNull(_spawnerManager, "[SinnerSpawner]: Spawner manager is null");
     }
 
     public void SpawnSinner()

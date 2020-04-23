@@ -1,42 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 
 public class PlayerMovementController : MonoBehaviour
 {
     [SerializeField] private float _maxSpeed = 20.0f;
 
+    [SerializeField] private InputController _inputController = null;
+
     private Player _player = null;
-    private Rigidbody _rb = null;
-    private Animator _animator = null;
     private PlayerBodyChanger _bodyChanger = null;
 
-    private InputController _inputController = null;
+    private Animator _animator = null;
+    private Rigidbody _rigidBody = null;
+
     private Vector3 _velocity = Vector3.zero;
 
     private void Awake()
     {
-        _bodyChanger = _bodyChanger ?? GetComponentInChildren<PlayerBodyChanger>();
-        _inputController = _inputController ?? InputController.Instance;
-        _animator = _animator ?? GetComponentInChildren<Animator>();
         _player = _player ?? GetComponent<Player>();
-        _rb = _rb ?? GetComponentInChildren<Rigidbody>();
+        _bodyChanger = _bodyChanger ?? GetComponentInChildren<PlayerBodyChanger>();
 
+        _animator = _animator ?? GetComponentInChildren<Animator>();
+        _rigidBody = _rigidBody ?? GetComponentInChildren<Rigidbody>();
+
+        Assert.IsNotNull(_player, "[PlayerMovementController]: Player is null");
         Assert.IsNotNull(_bodyChanger, "[PlayerMovementController]: Body changer is null");
         Assert.IsNotNull(_inputController, "[PlayerMovementController]: Input controller is null");
         Assert.IsNotNull(_animator, "[PlayerMovementController]: Animator is null");
-        Assert.IsNotNull(_player, "[PlayerMovementController]: Player is null");
-        Assert.IsNotNull(_rb, "[PlayerMovementController]: Rigidbody is null");
+        Assert.IsNotNull(_rigidBody, "[PlayerMovementController]: Rigidbody is null");
     }
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     private void Update()
     {
         _velocity.x = _inputController.horizontalAxis;
@@ -57,10 +50,10 @@ public class PlayerMovementController : MonoBehaviour
 
     private void UpdateMovement()
     {
-        _rb.MovePosition(_rb.position + _velocity * Time.fixedDeltaTime);
-        if (_rb.velocity.magnitude < .01)
+        _rigidBody.MovePosition(_rigidBody.position + _velocity * Time.fixedDeltaTime);
+        if (_rigidBody.velocity.magnitude < .01)
         {
-            _rb.velocity = Vector3.zero;
+            _rigidBody.velocity = Vector3.zero;
         }
     }
 

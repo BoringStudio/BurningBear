@@ -1,8 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class GameSettings : Singleton<GameSettings>
+public class GameSettings : MonoBehaviour
 {
     public Vector3 cameraRotation = new Vector3(60, 0, 0);
     public LayerMask interactableLayer;

@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.Assertions;
 
 public class CoalCoreSpawner : MonoBehaviour
 {
-    [SerializeField] private Coal _spawnablePrefab = null;
-    private Inferno _inferno = null;
-    private CoalCoreSpawnerManager _spawnerManager = null;
+    [SerializeField] private Coal _coalPrefab = null;
+
+    [SerializeField] private Inferno _inferno = null;
+    [SerializeField] private CoalCoreSpawnerManager _spawnerManager = null;
 
     public bool isActive
     {
@@ -16,19 +16,16 @@ public class CoalCoreSpawner : MonoBehaviour
 
     void Awake()
     {
-        _inferno = _inferno ?? Inferno.Instance;
-        _spawnerManager = _spawnerManager ?? CoalCoreSpawnerManager.Instance;
-    }
-
-    void Update()
-    {
+        Assert.IsNotNull(_coalPrefab, "[CoalCoreSpawner]: Coal prefab is null");
+        Assert.IsNotNull(_inferno, "[CoalCoreSpawner]: Inferno is null");
+        Assert.IsNotNull(_spawnerManager, "[CoalCoreSpawner]: Spawn manager is null");
     }
 
     public void SpawnCoalCore()
     {
         if (!isActive)
         {
-            var spawnHandler = _inferno.Spawn(_spawnablePrefab.AsSpawnable(), transform.position, transform);
+            var spawnHandler = _inferno.Spawn(_coalPrefab.AsSpawnable(), transform.position, transform);
             spawnHandler.spawner = this;
             isActive = true;
         }

@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class SinnerSpawnerManager : Singleton<SinnerSpawnerManager>
+public class SinnerSpawnerManager : MonoBehaviour
 {
     [SerializeField] private float _minTimeToSpawn = 20.0f;
     [SerializeField] private float _maxTimeToSpawn = 100.0f;
     [SerializeField] private int _maxActiveSinnerInstances = 10;
+
     private SinnerSpawner[] _spawners;
 
     private int _currentActiveSinnerInstances = 0;

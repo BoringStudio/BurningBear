@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3785827267886931559}
   - component: {fileID: 1467437470876562393}
   - component: {fileID: 3016162780181551432}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -77,7 +77,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5550249978880440805}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: FireSpawningPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 5033795469569704306}
   - component: {fileID: 5033795469569704304}
   - component: {fileID: 5033795469569704307}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: sprite_wing_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 5033795469887317194}
   - component: {fileID: 5033795469887317192}
   - component: {fileID: 5033795469887317195}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: sprite_wing_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,7 +265,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1631040805747194759}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: AttachPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,7 +297,7 @@ GameObject:
   - component: {fileID: 9155730878928840250}
   - component: {fileID: 9155730878928840249}
   - component: {fileID: 2868010294149468270}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: Dragon
   m_TagString: Unit
   m_Icon: {fileID: 0}
@@ -352,11 +352,11 @@ MonoBehaviour:
   _firePrefab: {fileID: 640745886273934199, guid: 1547f1f9e3348e44f9df9c5e703ebbb9,
     type: 3}
   _fireSpawningPoint: {fileID: 5550249978880440805}
-  requiredPower: 10
-  powerConsumptionTime: 10
-  timeToLive: 10
-  cooldown: 2.5
-  _meshRenderer: {fileID: 9155730879178456589}
+  _requiredPower: 10
+  _powerConsumptionTime: 10
+  _dragonMeshRenderer: {fileID: 9155730879178456589}
+  _timeToLive: 10
+  _cooldown: 1
   rotateAfter: 1
   _currentRotationTimer: 0
 --- !u!1 &9155730879724468876
@@ -370,7 +370,7 @@ GameObject:
   - component: {fileID: 9155730879724468882}
   - component: {fileID: 9155730879178456589}
   - component: {fileID: 9155730879178456595}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -452,7 +452,7 @@ GameObject:
   - component: {fileID: 9155730880338122138}
   - component: {fileID: 9155730880338122136}
   - component: {fileID: 9155730880338122137}
-  m_Layer: 11
+  m_Layer: 0
   m_Name: shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}

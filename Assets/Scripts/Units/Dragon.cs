@@ -1,29 +1,28 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Assertions;
 
-public class Dragon : Spawnable
+public class Dragon : Unit
 {
+    public override int cost { get => 6; }
+
     [SerializeField] private Color _originColor;
     [SerializeField] private Color _dyingColor;
 
     [SerializeField] private DragonFire _firePrefab;
     [SerializeField] private Transform _fireSpawningPoint;
 
-    [SerializeField] public float requiredPower = 10.0f;
-    [SerializeField] public float powerConsumptionTime = 10.0f;
+    [SerializeField] private float _requiredPower = 10.0f;
+    [SerializeField] private float _powerConsumptionTime = 10.0f;
 
-    private float _curPowerConsumptionTime = 0.0f;
-    private Pot _pot = null;
+    [SerializeField] private MeshRenderer _dragonMeshRenderer;
 
-    public float timeToLive = 10.0f;
-    public float cooldown = 1.0f;
+    [SerializeField] private float _timeToLive = 10.0f;
+    [SerializeField] private float _cooldown = 1.0f;
+
+    private float _currentPowerConsumptionTime = 0.0f;
 
     private float _currentCooldown = 0;
     private float _drainingRemaining = 0.0f;
-    private WaterArea _waterArea;
-
-    private Animator _animator;
-    [SerializeField] private MeshRenderer _meshRenderer;
 
     private bool _isShooting = false;
     private bool _isActive = true;
@@ -31,16 +30,28 @@ public class Dragon : Spawnable
     public float rotateAfter = 2.0f;
     public float _currentRotationTimer = 0.0f;
 
-    private float _remainingTime;
+    private float _remainingTimeToLive;
+
+    private Pot _pot = null;
+    private Inferno _inferno = null;
+    private WaterArea _waterArea = null;
+
+    private Animator _animator;
 
     void Awake()
     {
-        _waterArea = WaterArea.Instance;
-        _pot = _pot ?? Pot.Instance;
+        _remainingTimeToLive = _timeToLive;
 
-        _remainingTime = timeToLive;
+        _pot = FindObjectOfType<Pot>();
+        _inferno = FindObjectOfType<Inferno>();
+        _waterArea = FindObjectOfType<WaterArea>();
 
         _animator = GetComponentInChildren<Animator>();
+
+        Assert.IsNotNull(_pot, "[Dragon]: Pot is null");
+        Assert.IsNotNull(_inferno, "[Dragon]: Inferno is null");
+        Assert.IsNotNull(_waterArea, "[Dragon]: Water area is null");
+        Assert.IsNotNull(_animator, "[Dragon]: Animator is null");
 
         var animationEventNotifier = GetComponentInChildren<AnimationEventNotifier>();
         animationEventNotifier.action.AddListener(Fire);
@@ -48,13 +59,13 @@ public class Dragon : Spawnable
 
     void Update()
     {
-        _isActive = _pot.power >= requiredPower;
+        _isActive = _pot.power >= _requiredPower;
 
-        _curPowerConsumptionTime += Time.deltaTime;
-        if (_curPowerConsumptionTime >= powerConsumptionTime && _isActive)
+        _currentPowerConsumptionTime += Time.deltaTime;
+        if (_currentPowerConsumptionTime >= _powerConsumptionTime && _isActive)
         {
-            _pot.TakePower(requiredPower);
-            _curPowerConsumptionTime = 0.0f;
+            _pot.TakePower(_requiredPower);
+            _currentPowerConsumptionTime = 0.0f;
         }
     }
 
@@ -71,25 +82,26 @@ public class Dragon : Spawnable
 
             if (_currentCooldown <= 0)
             {
-                _currentCooldown = cooldown;
+                _currentCooldown = _cooldown;
                 _animator.SetTrigger("Fire");
 
                 _isShooting = true;
             }
         }
 
-        var scale = _meshRenderer.transform.localScale;
+        var scale = _dragonMeshRenderer.transform.localScale;
         Debug.Log(scale);
 
         _currentRotationTimer += Time.fixedDeltaTime;
         if (_currentRotationTimer > rotateAfter)
         {
             scale.x *= -1.0f;
-            _meshRenderer.transform.localScale = scale;
+            _dragonMeshRenderer.transform.localScale = scale;
             _currentRotationTimer = 0.0f;
         }
 
-        if (_drainingRemaining >= 0.0f) {
+        if (_drainingRemaining >= 0.0f)
+        {
             _waterArea.EvaporateSector(transform.position, scale.x > 0 ? 0 : 1, 5, 100);
             _drainingRemaining -= Time.fixedDeltaTime;
         }
@@ -98,11 +110,11 @@ public class Dragon : Spawnable
             _waterArea.EvaporateSector(transform.position, 0, 5, 10);
         }
 
-        _remainingTime -= Time.deltaTime;
-        if (_remainingTime <= 0.0f)
+        _remainingTimeToLive -= Time.deltaTime;
+        if (_remainingTimeToLive <= 0.0f)
         {
             _isActive = false;
-            Inferno.Instance.Despawn(this);
+            _inferno.Despawn(this);
         }
     }
 
@@ -110,7 +122,7 @@ public class Dragon : Spawnable
     {
         for (int i = -3; i < 2; ++i)
         {
-            var sign = Mathf.Sign(_meshRenderer.transform.localScale.x);
+            var sign = Mathf.Sign(_dragonMeshRenderer.transform.localScale.x);
 
             var direction = (Vector3.left * 5 + Vector3.forward * i - Vector3.forward * sign * 2).normalized * sign;
             var fire = Instantiate(_firePrefab, _fireSpawningPoint.transform.position + Random.Range(0.0f, 1.0f) * Vector3.right, Quaternion.identity);
@@ -121,14 +133,13 @@ public class Dragon : Spawnable
         }
 
         _isShooting = false;
-        _drainingRemaining = cooldown * 0.99f;
+        _drainingRemaining = _cooldown * 0.99f;
     }
 
     protected override void OnSpawnEnd(GameObject by)
     {
         _isActive = true;
-        Debug.LogError(_remainingTime);
-        _remainingTime = timeToLive;
+        _remainingTimeToLive = _timeToLive;
     }
 
     protected override void OnDespawnEnd(GameObject by)

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputController : Singleton<InputController>
+public class InputController : MonoBehaviour
 {
     public float horizontalAxis
     {

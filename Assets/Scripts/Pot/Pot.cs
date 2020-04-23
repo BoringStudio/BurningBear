@@ -1,61 +1,63 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 
-public class Pot : Singleton<Pot>
+public class Pot : MonoBehaviour
 {
     public int souls { get; private set; } = 0;
 
     public float power { get; private set; } = 0;
 
-    public int maxSouls = 10;
-    public int maxPower = 1000;
+    [SerializeField] private int _initialSouls = 10;
+    [SerializeField] private int _initialPower = 1000;
+
+    [SerializeField] private int _maxSouls = 10;
+    [SerializeField] private int _maxPower = 1000;
 
     [SerializeField] private float _maxSmokingDuration = 10.0f;
     [SerializeField] private float _maxSmokingRate = 10.0f;
     [SerializeField] private float _minSmokingRate = 0.0f;
 
-    private ParticleSystem _bigSmokeParticle = null;
-    private float _curSmokingDuration = 0.0f;
-    private bool _isSmoking = false;
-
     [SerializeField] private SphereIndicator soulIndicator;
     [SerializeField] private SphereIndicator powerIndicator;
 
+    [SerializeField] private WaterArea _waterArea;
+    [SerializeField] private GameController _gameController;
+
+    private ParticleSystem _bigSmokeParticle = null;
+    private float _currentSmokingDuration = 0.0f;
+    private bool _isSmoking = false;
+
     void Awake()
     {
-        souls = maxPower;
-        power = maxPower;
-        soulIndicator.SetFilled(souls, maxSouls);
-        powerIndicator.SetFilled(power, maxPower);
+        souls = _initialSouls;
+        power = _initialPower;
 
-        _bigSmokeParticle = _bigSmokeParticle ?? GetComponentInChildren<BigSmokePartical>().
-                                                 GetComponent<ParticleSystem>();
+        soulIndicator.SetFilled(souls, _maxSouls);
+        powerIndicator.SetFilled(power, _maxPower);
+
+        _bigSmokeParticle = _bigSmokeParticle ?? GetComponentInChildren<BigSmokePartical>().GetComponent<ParticleSystem>();
+
+        Assert.IsNotNull(_waterArea, "[Pot]: Water area is null");
+        Assert.IsNotNull(_gameController, "[Pot]: Game controller is null");
 
         Assert.IsNotNull(_bigSmokeParticle, "[Pot]: Big smoke particle is null");
 
-        var em = _bigSmokeParticle.emission;
-        em.rateOverTime = _minSmokingRate;
+        SetSmokingRate(_minSmokingRate);
     }
 
-    void Update()
+    private void FixedUpdate()
     {
-        _curSmokingDuration += Time.deltaTime;
-        if (_curSmokingDuration >= _maxSmokingDuration)
+        _currentSmokingDuration += Time.fixedDeltaTime;
+        if (_currentSmokingDuration >= _maxSmokingDuration)
         {
             if (_isSmoking)
             {
                 DisableBigSmoking();
             }
-            _curSmokingDuration = 0.0f;
+            _currentSmokingDuration = 0.0f;
         }
-    }
 
-    private void FixedUpdate()
-    {
-        var total = WaterArea.Instance.Calculate(transform.position);
-
+        var total = _waterArea.Calculate(transform.position);
         if (total > 200)
         {
             TakePower(1);
@@ -83,7 +85,7 @@ public class Pot : Singleton<Pot>
     {
         power += coal.powerCapacity;
         coal.AsSpawnable().DoDespawnImmediately(gameObject);
-        powerIndicator.SetFilled(power, maxPower);
+        powerIndicator.SetFilled(power, _maxPower);
     }
 
     void TossSinner(Sinner sinner)
@@ -92,22 +94,22 @@ public class Pot : Singleton<Pot>
 
         souls += 1;
         sinner.AsSpawnable().DoDespawnImmediately(gameObject);
-        soulIndicator.SetFilled(souls, maxSouls);
+        soulIndicator.SetFilled(souls, _maxSouls);
     }
 
     public void TakeSouls(int spent)
     {
         souls -= spent;
-        soulIndicator.SetFilled(souls, maxSouls);
+        soulIndicator.SetFilled(souls, _maxSouls);
     }
 
     public void TakePower(float spent)
     {
         power -= spent;
-        powerIndicator.SetFilled(power, maxPower);
+        powerIndicator.SetFilled(power, _maxPower);
         if (power <= 0)
         {
-            GameController.Instance.DoGameOver();
+            _gameController.DoGameOver();
         }
     }
 
@@ -115,19 +117,19 @@ public class Pot : Singleton<Pot>
     {
         _isSmoking = true;
         SetSmokingRate(_maxSmokingRate);
-        _curSmokingDuration = 0.0f;
+        _currentSmokingDuration = 0.0f;
     }
 
     void DisableBigSmoking()
     {
         _isSmoking = false;
         SetSmokingRate(_minSmokingRate);
-        _curSmokingDuration = 0.0f;
+        _currentSmokingDuration = 0.0f;
     }
 
-    void SetSmokingRate(float v)
+    void SetSmokingRate(float rate)
     {
-        var em = _bigSmokeParticle.emission;
-        em.rateOverTime = v;
+        var emission = _bigSmokeParticle.emission;
+        emission.rateOverTime = rate;
     }
 }

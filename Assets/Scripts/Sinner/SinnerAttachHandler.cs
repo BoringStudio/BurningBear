@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 
 public class SinnerAttachHandler : Attachable
@@ -41,10 +39,10 @@ public class SinnerAttachHandler : Attachable
             _sinner.AsSpawnable().spawner.FreeSinner();
             _sinner.AsSpawnable().spawner = null;
         }
-        
+
         _baseSprite.transform.rotation = Quaternion.Euler(
-            _baseSprite.transform.rotation.eulerAngles.x, 
-            _baseSprite.transform.rotation.eulerAngles.y, 
+            _baseSprite.transform.rotation.eulerAngles.x,
+            _baseSprite.transform.rotation.eulerAngles.y,
             90);
 
         _shadow.enabled = false;
@@ -55,10 +53,10 @@ public class SinnerAttachHandler : Attachable
     protected override bool OnDeattach(Vector3 releasedPosition)
     {
         transform.position = releasedPosition;
-        
+
         _baseSprite.transform.rotation = Quaternion.Euler(
-            _baseSprite.transform.rotation.eulerAngles.x, 
-            _baseSprite.transform.rotation.eulerAngles.y, 
+            _baseSprite.transform.rotation.eulerAngles.x,
+            _baseSprite.transform.rotation.eulerAngles.y,
             0);
 
         _shadow.enabled = true;

@@ -1,10 +1,19 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.UI;
 
 public class SphereIndicator : MonoBehaviour
 {
     public Sprite[] levelSprites;
     public Image image;
+
+    [SerializeField] private TextMeshProUGUI counterText;
+
+    private void Awake()
+    {
+        Assert.IsNotNull(counterText, "[SphereIndicator]: Counter text is null");
+    }
 
     public void SetFilled(float current, float outOf)
     {
@@ -19,5 +28,7 @@ public class SphereIndicator : MonoBehaviour
             image.enabled = true;
             image.sprite = levelSprites[Mathf.Min(level - 1, levelSprites.Length - 1)];
         }
+
+        counterText.text = $"{(int)current}/{(int)outOf}";
     }
 }

@@ -1,46 +1,56 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 
-public class Suck : Spawnable
+public class Suck : Unit
 {
+    public override int cost { get => 3; }
+
     [SerializeField] private Texture2D _idleTexture;
     [SerializeField] private Texture2D[] _suckTextures;
 
     [SerializeField] private Color _originColor;
     [SerializeField] private Color _dyingColor;
 
-    public float timeToLive = 10.0f;
-
-    public float cooldown = 1.0f;
-
     [SerializeField] public float requiredPower = 10.0f;
     [SerializeField] public float powerConsumptionTime = 10.0f;
 
+    [SerializeField] private float timeToLive = 10.0f;
+    [SerializeField] private float cooldown = 1.0f;
+
     private float _curPowerConsumptionTime = 0.0f;
-    private Pot _pot = null;
 
     private float _currentCooldown = 0;
-    private WaterArea _waterArea;
 
     private int _currentFrame = 0;
     private float _currentFrameTime = 0.0f;
 
-    private MaterialPropertyBlock _materialPropertyBlock;
-    private MeshRenderer _meshRenderer;
-
     private bool _isSucking = false;
     private bool _isActive = false;
 
-    private float _remainingTime;
+    private float _remainingTimeToLive;
+
+    private Pot _pot = null;
+    private Inferno _inferno = null;
+    private WaterArea _waterArea = null;
+
+    private MaterialPropertyBlock _materialPropertyBlock;
+    private MeshRenderer _meshRenderer;
 
     private void Awake()
     {
-        _waterArea = WaterArea.Instance;
-        _pot = _pot ?? Pot.Instance;
+        _remainingTimeToLive = timeToLive;
 
-        _remainingTime = timeToLive;
+        _pot = FindObjectOfType<Pot>();
+        _inferno = FindObjectOfType<Inferno>();
+        _waterArea = FindObjectOfType<WaterArea>();
 
         _materialPropertyBlock = new MaterialPropertyBlock();
         _meshRenderer = GetComponentInChildren<MeshRenderer>();
+
+        Assert.IsNotNull(_pot, "[Suck]: Pot is null");
+        Assert.IsNotNull(_inferno, "[Suck]: Inferno is null");
+        Assert.IsNotNull(_waterArea, "[Suck]: Water area is null");
+        Assert.IsNotNull(_meshRenderer, "[Suck]: Mesh renderer is null");
     }
 
     void FixedUpdate()
@@ -94,22 +104,21 @@ public class Suck : Spawnable
             }
         }
 
-        _materialPropertyBlock.SetColor("_Color", Color.Lerp(_dyingColor, _originColor, _remainingTime / timeToLive));
+        _materialPropertyBlock.SetColor("_Color", Color.Lerp(_dyingColor, _originColor, _remainingTimeToLive / timeToLive));
         _meshRenderer.SetPropertyBlock(_materialPropertyBlock);
 
-        _remainingTime -= Time.deltaTime;
-        if (_remainingTime <= 0.0f)
+        _remainingTimeToLive -= Time.deltaTime;
+        if (_remainingTimeToLive <= 0.0f)
         {
             _isActive = false;
-            Inferno.Instance.Despawn(this);
+            _inferno.Despawn(this);
         }
     }
 
     protected override void OnSpawnEnd(GameObject by)
     {
         _isActive = true;
-        Debug.LogError(_remainingTime);
-        _remainingTime = timeToLive;
+        _remainingTimeToLive = timeToLive;
     }
 
     protected override void OnDespawnEnd(GameObject by)

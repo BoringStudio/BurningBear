@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using System.Collections;
+using UnityEngine.Assertions;
 
 public class WaterSpawner : MonoBehaviour
 {
-    private WaterArea _waterArea;
+    [SerializeField] private WaterArea _waterArea;
 
     public float liquifyEvery = 1.0f;
     public float enableAfter = 0.0f;
@@ -13,14 +13,15 @@ public class WaterSpawner : MonoBehaviour
 
     private void Awake()
     {
-        _waterArea = WaterArea.Instance;
+        Assert.IsNotNull(_waterArea, "[WaterSpawner]: Water area is null");
     }
 
     private void FixedUpdate()
     {
         _currentTimer += Time.fixedDeltaTime;
 
-        if (_currentTimer > enableAfter) {
+        if (_currentTimer > enableAfter)
+        {
             _liquifyTimer += Time.fixedDeltaTime;
             if (_liquifyTimer >= liquifyEvery)
             {

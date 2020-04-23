@@ -1,58 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(CoalCoreSpawnHandler))]
 public class CoalCore : MonoBehaviour
 {
-    [SerializeField] private Coal _coalPrefab;
-
-    private CoalCoreSpawnHandler _spawnHandler = null;
-
-    public float maxProductionProgress = 100.0f;
-    public float currentProductionProgress = 0.0f;
-    public float productionRate = 10.0f;
-    public int coalCapacity = 20;
-
     public bool isEmpty
     {
-        get => coalCapacity <= 0;
+        get => _coalCapacity <= 0;
     }
 
-    private Inferno _inferno;
-    private Player _player;
+    public CoalCoreSpawnHandler spawnHandler { get; private set; }
 
-    // Start is called before the first frame update
+    [SerializeField] private float _maxProductionProgress = 100.0f;
+    [SerializeField] private float _currentProductionProgress = 0.0f;
+    [SerializeField] private float _productionRate = 10.0f;
+    [SerializeField] private int _coalCapacity = 20;
+
+    [SerializeField] private Coal _coalPrefab;
+
+    [SerializeField] private Player _player;
+    [SerializeField] private Inferno _inferno;
+
     void Awake()
     {
-        _inferno = _inferno ?? Inferno.Instance;
-        _player = _player ?? Player.Instance;
-        _spawnHandler = _spawnHandler ?? GetComponent<CoalCoreSpawnHandler>();
+        spawnHandler = spawnHandler ?? GetComponent<CoalCoreSpawnHandler>();
 
-        Assert.IsNotNull(_spawnHandler, "[CoalCore] Spawn handler is null");
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public CoalCoreSpawnHandler AsSpawnable() {
-        return _spawnHandler ?? GetComponent<CoalCoreSpawnHandler>();
+        Assert.IsNotNull(_player, "[CoalCore] Player is null");
+        Assert.IsNotNull(_inferno, "[CoalCore] Inferno is null");
+        Assert.IsNotNull(spawnHandler, "[CoalCore] Spawn handler is null");
     }
 
     public bool Mine()
     {
         bool result = false;
-        
-        currentProductionProgress += productionRate;
-        if (currentProductionProgress >= maxProductionProgress)
+
+        _currentProductionProgress += _productionRate;
+        if (_currentProductionProgress >= _maxProductionProgress)
         {
-            currentProductionProgress = 0.0f;
-            coalCapacity -= 1;
+            _currentProductionProgress = 0.0f;
+            _coalCapacity -= 1;
             SpawnCoal();
             result = true;
         }
@@ -67,7 +54,7 @@ public class CoalCore : MonoBehaviour
 
     public void SpawnCoal()
     {
-        var coal = _inferno.Spawn(
+        _inferno.Spawn(
             _coalPrefab.GetComponent<Spawnable>(),
             _player.attachPoint.transform.position,
             _player.attachPoint.transform);
@@ -75,6 +62,6 @@ public class CoalCore : MonoBehaviour
 
     private void DespawnCoalCore()
     {
-        _inferno.Despawn(_spawnHandler);
+        _inferno.Despawn(spawnHandler);
     }
 }
