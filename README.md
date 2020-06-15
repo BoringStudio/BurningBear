@@ -1,8 +1,7 @@
 # BurningBear
 
-Идет медведь по лесу<br>
-Видит машина горит<br>
-Сел и сгорел<br>
+![streage game](https://static.jam.vg/raw/17d/81/z/32f4a.jpg)
 
-![rjomba](rjomba.jpg)
-*Ну сгорел и сгорел* (С) Гений
+## Features
+- **Glorious** medieval art and two cool metal tracks
+- Made with love and sweat
